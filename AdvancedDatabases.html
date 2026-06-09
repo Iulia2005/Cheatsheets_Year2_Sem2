@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Databases — Fast Learning Guide</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:       #0d0f14;
+  --surface:  #13161e;
+  --card:     #1a1e2a;
+  --border:   #252a38;
+  --accent:   #3ecf8e;
+  --text:     #e2e8f0;
+  --muted:    #8892a4;
+  --code-bg:  #0a0c12;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── CROSS-NAV ── */
+.crossnav {
+  background: #080a0f;
+  border-bottom: 1px solid #1a1d2a;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 40px;
+  flex-shrink: 0;
+}
+.crossnav::-webkit-scrollbar { display: none; }
+.crossnav-label {
+  color: rgba(255,255,255,0.22);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0 12px 0 0;
+  border-right: 1px solid #1e2235;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.crossnav a {
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.crossnav a:hover {
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+}
+.crossnav a.active {
+  color: #fff;
+  background: rgba(79,142,247,0.14);
+  border-color: rgba(79,142,247,0.32);
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  background: linear-gradient(160deg, #0d0f14 0%, #111520 60%, #0d0f14 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 44px 32px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, color-mix(in srgb, #3ecf8e 8%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-header-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.page-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  opacity: 0.85;
+}
+.page-header h1 {
+  font-size: clamp(24px, 3.5vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.page-header h1 span { color: var(--accent); }
+.page-header p {
+  color: var(--muted);
+  font-size: 13.5px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+/* ── PAGE NAV ── */
+.page-nav {
+  background: rgba(13,15,20,0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 40px;
+  z-index: 100;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.page-nav::-webkit-scrollbar { display: none; }
+.page-nav-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0;
+  white-space: nowrap;
+}
+.page-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.page-nav a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+  border-color: var(--border);
+}
+
+/* ── CONTENT WRAPPER ── */
+.page-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+}
+
+/* ── INHERIT existing content styles ── */
+h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c8d0e0;
+}
+pre, code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--code-bg);
+  border: 1px solid #1e2235;
+  border-radius: 6px;
+  color: #c8d0e0;
+}
+pre { padding: 14px; overflow-x: auto; line-height: 1.55; }
+code { padding: 1px 6px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 700px) {
+  .page-header { padding: 32px 16px 28px; }
+  .page-nav { padding: 0 12px; }
+  .page-content { padding: 20px 16px 60px; }
+}
+
+</style>
+<style>
+  * { box-sizing: border-box; }
+/* HERO */
+  /* MAIN LAYOUT */
+    .container { max-width: 100%; margin: 0 auto; padding: 0; }
+  /* SECTION */
+  .section {
+    margin-bottom: 48px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .lec-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  /* CONCEPT GRID */
+  .concept-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .concept-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+  .concept-card .term {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .concept-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  /* CODE BLOCK */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    margin: 14px 0;
+    position: relative;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: #cbd5e1;
+  }
+  .kw { color: #a78bfa; }
+  .str { color: #34d399; }
+  .cm { color: #4a5568; font-style: italic; }
+  .fn { color: #4f9cf9; }
+  .num { color: #f59e0b; }
+  .type { color: #f87171; }
+  /* INLINE CODE */
+  p code, li code {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: var(--accent3);
+  }
+  /* KEY POINTS */
+  .key-point {
+    display: flex;
+    gap: 10px;
+    margin: 8px 0;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    font-size: 13.5px;
+  }
+  .key-point.warn { border-left-color: var(--accent4); }
+  .key-point.good { border-left-color: var(--accent3); }
+  .key-point.danger { border-left-color: var(--accent5); }
+  .key-point::before { content: "→"; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+  .key-point.warn::before { content: "⚡"; color: var(--accent4); }
+  .key-point.good::before { content: "✓"; color: var(--accent3); }
+  .key-point.danger::before { content: "✗"; color: var(--accent5); }
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+  }
+  td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--muted);
+  }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { color: var(--text); font-weight: 500; }
+  /* SUBSECTION TITLE */
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 20px 0 10px;
+  }
+  h3:first-child { margin-top: 0; }
+  /* CHEAT SHEET SECTION */
+  .cheatsheet {
+    margin-top: 60px;
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .cs-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .cs-card-body p { margin-bottom: 6px; line-height: 1.55; }
+  .cs-card-body p:last-child { margin-bottom: 0; }
+  /* COLOR CODING FOR LECTURE BADGES */
+  .c1 { background: rgba(79,156,249,0.15); color: #4f9cf9; }
+  .c2 { background: rgba(167,139,250,0.15); color: #a78bfa; }
+  .c3 { background: rgba(52,211,153,0.15); color: #34d399; }
+  .c4 { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .c5 { background: rgba(248,113,113,0.15); color: #f87171; }
+  .c6 { background: rgba(79,156,249,0.15); color: #60a5fa; }
+  .c7 { background: rgba(167,139,250,0.15); color: #c4b5fd; }
+  .c8 { background: rgba(52,211,153,0.15); color: #6ee7b7; }
+  .c9 { background: rgba(245,158,11,0.15); color: #fcd34d; }
+  .c10 { background: rgba(248,113,113,0.15); color: #fca5a5; }
+  .c11 { background: rgba(79,156,249,0.12); color: #93c5fd; }
+  .c12 { background: rgba(167,139,250,0.12); color: #ddd6fe; }
+  .c13 { background: rgba(52,211,153,0.12); color: #a7f3d0; }
+  .c14 { background: rgba(245,158,11,0.12); color: #fde68a; }
+  p { margin-bottom: 10px; }
+  ul, ol { padding-left: 20px; margin-bottom: 10px; }
+  li { margin-bottom: 4px; color: var(--muted); font-size: 13.5px; }
+  li strong { color: var(--text); }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<div class="crossnav">
+  <a href="index.html" style="color:rgba(255,255,255,0.25);font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid transparent;text-decoration:none;transition:all .15s;flex-shrink:0;" onmouseover="this.style.color='rgba(255,255,255,0.65)';this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'" onmouseout="this.style.color='rgba(255,255,255,0.25)';this.style.background='';this.style.borderColor='transparent'">⌂</a>
+  <span class="crossnav-label">Notes</span>
+    <a href="BigDataFundamentals.html">🗄️ Big Data</a>
+    <a href="ProgrammingInJAVA.html">☕ Java</a>
+    <a href="ObjectOrientedProgramming_C_.html">🔷 OOP C#</a>
+    <a href="AdvancedDatabases.html" class="active">🗃️ Databases</a>
+    <a href="SoftwarePackages.html">📦 Packages</a>
+</div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-label">ULBS · Advanced Databases</div>
+    <h1>Advanced <span>Databases</span></h1>
+    <p>14 lectures distilled into the essentials. Concepts, examples, and a cheat sheet — everything you need, nothing you don't.</p>
+  </div>
+</div>
+
+<div class="page-nav">
+  <div class="page-nav-inner">
+    <a href="#l1">L1 Architecture</a>
+    <a href="#l2">L2 Security</a>
+    <a href="#l3">L3 Transactions</a>
+    <a href="#l4">L4 OLTP/OLAP</a>
+    <a href="#l5">L5 Relational</a>
+    <a href="#l6">L6 Objects</a>
+    <a href="#l7">L7 SQL Joins</a>
+    <a href="#l8">L8 Aggregation</a>
+    <a href="#l9">L9 Subqueries</a>
+    <a href="#l10">L10 PL/SQL</a>
+    <a href="#l11">L11 Functions</a>
+    <a href="#l12">L12 Anon Blocks</a>
+    <a href="#l13">L13 Exceptions</a>
+    <a href="#l14">L14 Cursors</a>
+    <a href="#cheatsheet">⚡ Cheat Sheet</a>
+  </div>
+</div>
+
+<div class="page-content">
+<!-- LECTURE 1 -->
+<div class="section" id="l1">
+  <div class="section-header">
+    <span class="lec-badge c1">Lecture 1</span>
+    <h2>General Architecture of a Database Server</h2>
+  </div>
+  <div class="section-body">
+    <h3>Core Hierarchy</h3>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="term">Data</div>
+        <p>Raw facts with no meaning on their own. e.g. <code>1</code>, <code>ABC</code>, <code>19</code></p>
+      </div>
+      <div class="concept-card">
+        <div class="term">Record / Tuple</div>
+        <p>A row in a table — a collection of related data items that together form meaningful info.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term">Table / Relation</div>
+        <p>A collection of records. Columns = <em>attributes/fields</em>. Rows = <em>tuples/records</em>.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term">Database</div>
+        <p>A collection of related tables. Tables share common attributes that allow joining them.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term">DBMS</div>
+        <p>The software that manages a database — defines, stores, retrieves, and updates data efficiently.</p>
+      </div>
+    </div>
+
+    <h3>3 Levels of Data Abstraction</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Level</th><th>Also Called</th><th>What It Describes</th><th>Who Uses It</th></tr>
+        <tr><td>Physical</td><td>Internal Schema</td><td>How data is actually stored on disk (bits, blocks)</td><td>Storage engineers</td></tr>
+        <tr><td>Logical</td><td>Conceptual Schema</td><td>What data exists and its relationships</td><td>DBAs, developers</td></tr>
+        <tr><td>View</td><td>External Schema</td><td>A subset of the database tailored for specific users</td><td>End users</td></tr>
+      </table>
+    </div>
+
+    <h3>Why Problems Arise Without DBMS</h3>
+    <div class="key-point danger">Data redundancy — same data stored in multiple files leads to inconsistencies.</div>
+    <div class="key-point danger">Atomicity failure — a crash mid-transfer could deduct money from A without crediting B.</div>
+    <div class="key-point danger">Concurrent-access anomalies — two users reading the same balance ($10,000) and both writing back only their own deduction.</div>
+    <div class="key-point danger">Security — file systems can't easily restrict which fields different users can access.</div>
+
+    <h3>Key Terms</h3>
+    <div class="key-point"><strong>Schema</strong> — the overall design/structure of the database (changes rarely).</div>
+    <div class="key-point"><strong>Instance</strong> — the actual data stored at a given moment in time.</div>
+    <div class="key-point"><strong>Data Independence</strong> — changing the physical schema doesn't break the logical schema or applications.</div>
+  </div>
+</div>
+
+<!-- LECTURE 2 -->
+<div class="section" id="l2">
+  <div class="section-header">
+    <span class="lec-badge c2">Lecture 2</span>
+    <h2>Oracle Database Security</h2>
+  </div>
+  <div class="section-body">
+    <h3>4 Security Dimensions</h3>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="term" style="color:#f87171">Physical</div>
+        <p>Servers must be in secure locations. Unauthorized physical access bypasses all software controls.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term" style="color:#f59e0b">Personnel</div>
+        <p>Background checks on DBAs. Disgruntled employees are a major threat that no technical fix can fully address.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term" style="color:#34d399">Procedural</div>
+        <p>Policies and role separation. E.g., one person handles backups, another handles reporting — never the same person.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term" style="color:#4f9cf9">Technical</div>
+        <p>Authentication, authorization, encryption, auditing — enforced by software and hardware.</p>
+      </div>
+    </div>
+
+    <h3>Identity Management</h3>
+    <p>As users, databases, and apps scale (e.g., 100 users × 50 databases = 5,000 potential interactions), managing access manually becomes impossible. <strong>Identity Management</strong> solves this via a centralized control system:</p>
+    <div class="key-point good">Single point of control = easier to secure and revoke access instantly (e.g., when an employee leaves).</div>
+    <div class="key-point good">Changes in one place automatically propagate to all connected databases and apps.</div>
+
+    <h3>Security Best Practices</h3>
+    <ul>
+      <li>Use the <strong>principle of least privilege</strong> — users only get what they need.</li>
+      <li><strong>Separate duties</strong> — one person shouldn't control both data entry and verification.</li>
+      <li>Enforce <strong>screen locking</strong> and desk policies for physical security.</li>
+      <li>Use <strong>GRANT/REVOKE</strong> in SQL to control table access per user/role.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- LECTURE 3 -->
+<div class="section" id="l3">
+  <div class="section-header">
+    <span class="lec-badge c3">Lecture 3</span>
+    <h2>Data Blocks, Transactions & Locking</h2>
+  </div>
+  <div class="section-body">
+    <h3>What Is a Transaction?</h3>
+    <p>A transaction is a logical unit of work — a group of SQL statements that must either <em>all succeed</em> or <em>all fail together</em>.</p>
+    <pre><code><span class="cm">-- Transfer $500: must be atomic</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance - <span class="num">500</span> <span class="kw">WHERE</span> id = <span class="str">'A'</span>;
+  <span class="kw">UPDATE</span> accounts <span class="kw">SET</span> balance = balance + <span class="num">500</span> <span class="kw">WHERE</span> id = <span class="str">'B'</span>;
+  <span class="kw">COMMIT</span>;   <span class="cm">-- save both changes</span>
+<span class="kw">EXCEPTION</span>
+  <span class="kw">WHEN OTHERS THEN</span>
+    <span class="kw">ROLLBACK</span>; <span class="cm">-- undo everything if error</span>
+<span class="kw">END</span>;</code></pre>
+
+    <h3>ACID Properties</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Property</th><th>Meaning</th><th>Example</th></tr>
+        <tr><td>Atomicity</td><td>All or nothing</td><td>Transfer either completes fully or is fully undone</td></tr>
+        <tr><td>Consistency</td><td>DB stays valid before and after</td><td>Account balances can't go negative if that's a constraint</td></tr>
+        <tr><td>Isolation</td><td>Concurrent transactions don't interfere</td><td>Two users updating the same row see each other's committed data only</td></tr>
+        <tr><td>Durability</td><td>Committed data survives crashes</td><td>After COMMIT, power loss doesn't lose the data</td></tr>
+      </table>
+    </div>
+
+    <h3>Oracle's Locking Model (Key Insight)</h3>
+    <div class="key-point good"><strong>Readers never block writers, writers never block readers.</strong> This is fundamental to Oracle's concurrency advantage.</div>
+    <div class="key-point good">Row-level locking has zero extra overhead — locking 1M rows costs the same in resources as locking 1 row.</div>
+    <div class="key-point warn">Hold locks only as long as your business logic requires. Commit when you <em>must</em>, not as fast as possible.</div>
+    <div class="key-point danger">Never manually escalate row locks to table locks "for performance" — in Oracle, it wastes resources and kills concurrency.</div>
+  </div>
+</div>
+
+<!-- LECTURE 4 -->
+<div class="section" id="l4">
+  <div class="section-header">
+    <span class="lec-badge c4">Lecture 4</span>
+    <h2>OLTP vs OLAP Systems & Data Warehouses</h2>
+  </div>
+  <div class="section-body">
+    <h3>OLTP vs OLAP at a Glance</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Feature</th><th>OLTP (Operational)</th><th>OLAP (Analytical)</th></tr>
+        <tr><td>Purpose</td><td>Day-to-day transactions</td><td>Decision making & analysis</td></tr>
+        <tr><td>Users</td><td>Clerks, customers, IT staff</td><td>Managers, analysts, executives</td></tr>
+        <tr><td>Data</td><td>Current, detailed</td><td>Historical, summarized</td></tr>
+        <tr><td>DB Design</td><td>Entity-Relationship (ER) model</td><td>Star / Snowflake schema</td></tr>
+        <tr><td>Operations</td><td>INSERT, UPDATE, DELETE</td><td>Mostly SELECT (read-heavy)</td></tr>
+        <tr><td>Scale</td><td>Thousands of short transactions/sec</td><td>Complex queries on millions of rows</td></tr>
+      </table>
+    </div>
+
+    <h3>Data Warehouse — 4 Key Properties (Inmon's Definition)</h3>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="term" style="color:#4f9cf9">Subject-Oriented</div>
+        <p>Organized around business subjects: customers, sales, products — not around applications or processes.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term" style="color:#a78bfa">Integrated</div>
+        <p>Combines data from multiple heterogeneous sources (relational DBs, flat files, transaction logs) with consistent formats.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term" style="color:#34d399">Time-Variant</div>
+        <p>Stores 5–10 years of historical data. Every record has a time element so trends can be analyzed.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term" style="color:#f59e0b">Non-Volatile</div>
+        <p>Data is loaded in bulk and read — never updated record-by-record. Only two operations: load and query.</p>
+      </div>
+    </div>
+
+    <h3>OLAP Operations on a Data Cube</h3>
+    <ul>
+      <li><strong>Roll-up</strong> — summarize data to a higher level (e.g., daily → monthly → yearly sales)</li>
+      <li><strong>Drill-down</strong> — go to a more detailed level (e.g., yearly → quarterly → daily)</li>
+      <li><strong>Slice</strong> — filter one dimension (e.g., only show Q1 data)</li>
+      <li><strong>Dice</strong> — filter multiple dimensions (e.g., Q1 AND only product category X AND only region Y)</li>
+    </ul>
+  </div>
+</div>
+
+<!-- LECTURE 5 -->
+<div class="section" id="l5">
+  <div class="section-header">
+    <span class="lec-badge c5">Lecture 5</span>
+    <h2>The Relational Model & SQL Standard</h2>
+  </div>
+  <div class="section-body">
+    <h3>Core Relational Terminology</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Relational Term</th><th>Common Equivalent</th><th>Meaning</th></tr>
+        <tr><td>Relation</td><td>Table</td><td>A 2D structure of rows and columns</td></tr>
+        <tr><td>Tuple</td><td>Row / Record</td><td>One entity instance</td></tr>
+        <tr><td>Attribute</td><td>Column / Field</td><td>One property of the entity</td></tr>
+        <tr><td>Domain</td><td>Data type</td><td>Set of valid values for an attribute</td></tr>
+        <tr><td>Primary Key</td><td>PK</td><td>Attribute(s) that uniquely identify each tuple</td></tr>
+        <tr><td>Foreign Key</td><td>FK</td><td>Attribute that references the PK of another relation</td></tr>
+      </table>
+    </div>
+
+    <h3>Rules of Relations</h3>
+    <div class="key-point">No two rows in a relation can be identical.</div>
+    <div class="key-point">Each cell holds exactly one value (atomicity of cells — 1NF).</div>
+    <div class="key-point">Column order and row order have no meaning — a relation is a set, not a list.</div>
+
+    <h3>Keys Example</h3>
+    <pre><code><span class="cm">-- Primary Key uniquely identifies each row</span>
+<span class="kw">CREATE TABLE</span> salesperson (
+  salesperson_id  <span class="type">NUMBER</span>  <span class="kw">PRIMARY KEY</span>,  <span class="cm">-- PK</span>
+  name            <span class="type">VARCHAR2</span>(<span class="num">50</span>),
+  commission_pct  <span class="type">NUMBER</span>(<span class="num">5,2</span>)
+);
+
+<span class="cm">-- Foreign Key references the PK of another table</span>
+<span class="kw">CREATE TABLE</span> customer (
+  customer_id     <span class="type">NUMBER</span>  <span class="kw">PRIMARY KEY</span>,
+  name            <span class="type">VARCHAR2</span>(<span class="num">50</span>),
+  salesperson_id  <span class="type">NUMBER</span>  <span class="kw">REFERENCES</span> salesperson(salesperson_id)
+);</code></pre>
+
+    <h3>Normal Forms (Quick Reference)</h3>
+    <div class="key-point">1NF — each column has atomic (indivisible) values; no repeating groups.</div>
+    <div class="key-point">2NF — 1NF + no partial dependencies (non-key columns depend on the whole PK).</div>
+    <div class="key-point">3NF — 2NF + no transitive dependencies (non-key columns depend only on the PK, not on other non-keys).</div>
+  </div>
+</div>
+
+<!-- LECTURE 6 -->
+<div class="section" id="l6">
+  <div class="section-header">
+    <span class="lec-badge c6">Lecture 6</span>
+    <h2>Technologies for Storing Objects in Oracle</h2>
+  </div>
+  <div class="section-body">
+    <h3>Object-Relational Model</h3>
+    <p>Oracle extends pure relational databases with <strong>object types</strong> — allowing you to store complex, structured objects directly in the DB.</p>
+
+    <h3>Creating an Object Type</h3>
+    <pre><code><span class="cm">-- Define a reusable type (like a class in OOP)</span>
+<span class="kw">CREATE TYPE</span> address_type <span class="kw">AS OBJECT</span> (
+  street   <span class="type">VARCHAR2</span>(<span class="num">100</span>),
+  city     <span class="type">VARCHAR2</span>(<span class="num">50</span>),
+  zip      <span class="type">VARCHAR2</span>(<span class="num">10</span>)
+);
+
+<span class="cm">-- Use the object type as a column</span>
+<span class="kw">CREATE TABLE</span> employee (
+  emp_id   <span class="type">NUMBER</span>  <span class="kw">PRIMARY KEY</span>,
+  name     <span class="type">VARCHAR2</span>(<span class="num">50</span>),
+  address  address_type  <span class="cm">-- nested object!</span>
+);</code></pre>
+
+    <h3>Key Advantages</h3>
+    <div class="key-point good">Complex real-world entities (a building with multiple floors, rooms, attributes) map naturally to object types.</div>
+    <div class="key-point good">Enables interoperability — different applications can share the same complex data structures (critical in e.g., CAD / BIM systems).</div>
+    <div class="key-point">Object types can have methods (functions/procedures defined on the type) — bringing OOP into the DB layer.</div>
+
+    <h3>IFC Standard Context</h3>
+    <p>The lecture uses <strong>IFC (Industry Foundation Classes)</strong> as a real-world example: a construction standard where architects, engineers, and managers all work with the same complex building model. Storing this in an object-relational DB allows seamless sharing across professional applications.</p>
+  </div>
+</div>
+
+<!-- LECTURE 7 -->
+<div class="section" id="l7">
+  <div class="section-header">
+    <span class="lec-badge c7">Lecture 7</span>
+    <h2>Advanced SQL Queries (I) — Joining Tables</h2>
+  </div>
+  <div class="section-body">
+    <h3>Types of Joins</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Join Type</th><th>Returns</th></tr>
+        <tr><td>INNER JOIN</td><td>Only rows with matching values in both tables</td></tr>
+        <tr><td>LEFT JOIN</td><td>All rows from left table + matching rows from right (NULL if no match)</td></tr>
+        <tr><td>RIGHT JOIN</td><td>All rows from right table + matching rows from left</td></tr>
+        <tr><td>FULL OUTER JOIN</td><td>All rows from both tables (NULL where no match)</td></tr>
+        <tr><td>CROSS JOIN</td><td>Every combination of rows from both tables (Cartesian product)</td></tr>
+      </table>
+    </div>
+
+    <pre><code><span class="cm">-- INNER JOIN: only customers with a salesperson</span>
+<span class="kw">SELECT</span> c.name, s.name <span class="kw">AS</span> salesperson
+<span class="kw">FROM</span> customer c
+<span class="kw">INNER JOIN</span> salesperson s <span class="kw">ON</span> c.salesperson_id = s.salesperson_id;
+
+<span class="cm">-- LEFT JOIN: all customers, salesperson may be NULL</span>
+<span class="kw">SELECT</span> c.name, s.name <span class="kw">AS</span> salesperson
+<span class="kw">FROM</span> customer c
+<span class="kw">LEFT JOIN</span> salesperson s <span class="kw">ON</span> c.salesperson_id = s.salesperson_id;</code></pre>
+
+    <h3>Common Table Expressions (CTEs)</h3>
+    <p>A CTE names a subquery for readability and reuse. Think of it as a temporary named result set.</p>
+    <pre><code><span class="cm">-- Without CTE (harder to read)</span>
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> orders o
+<span class="kw">INNER JOIN</span> (<span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> customers <span class="kw">WHERE</span> country = <span class="str">'US'</span>) us_cust
+  <span class="kw">ON</span> o.customer_id = us_cust.customer_id;
+
+<span class="cm">-- With CTE (cleaner)</span>
+<span class="kw">WITH</span> us_customers <span class="kw">AS</span> (
+  <span class="kw">SELECT</span> customer_id <span class="kw">FROM</span> customers <span class="kw">WHERE</span> country = <span class="str">'US'</span>
+)
+<span class="kw">SELECT</span> * <span class="kw">FROM</span> orders o
+<span class="kw">INNER JOIN</span> us_customers uc <span class="kw">ON</span> o.customer_id = uc.customer_id;</code></pre>
+
+    <h3>Window Functions</h3>
+    <p>Unlike GROUP BY (which collapses rows), window functions compute over a <em>window</em> of rows while keeping all rows visible.</p>
+    <pre><code><span class="cm">-- Running total: see ALL orders AND cumulative sum per day</span>
+<span class="kw">SELECT</span>
+  order_date,
+  order_amount,
+  <span class="fn">SUM</span>(order_amount) <span class="kw">OVER</span> (<span class="kw">PARTITION BY</span> order_date) <span class="kw">AS</span> daily_total,
+  <span class="fn">SUM</span>(order_amount) <span class="kw">OVER</span> (<span class="kw">ORDER BY</span> order_date) <span class="kw">AS</span> running_total
+<span class="kw">FROM</span> orders;</code></pre>
+  </div>
+</div>
+
+<!-- LECTURE 8 -->
+<div class="section" id="l8">
+  <div class="section-header">
+    <span class="lec-badge c8">Lecture 8</span>
+    <h2>Advanced SQL Queries (II) — Data Aggregation</h2>
+  </div>
+  <div class="section-body">
+    <h3>Aggregate Functions</h3>
+    <div class="concept-grid">
+      <div class="concept-card"><div class="term"><code>COUNT(*)</code></div><p>Number of rows in a group.</p></div>
+      <div class="concept-card"><div class="term"><code>SUM(col)</code></div><p>Total of all values in a column.</p></div>
+      <div class="concept-card"><div class="term"><code>AVG(col)</code></div><p>Average value (ignores NULLs).</p></div>
+      <div class="concept-card"><div class="term"><code>MAX / MIN</code></div><p>Highest or lowest value in the group.</p></div>
+    </div>
+
+    <h3>GROUP BY + HAVING</h3>
+    <pre><code><span class="cm">-- GROUP BY groups rows; HAVING filters those groups</span>
+<span class="kw">SELECT</span>
+  department_id,
+  <span class="fn">COUNT</span>(*) <span class="kw">AS</span> headcount,
+  <span class="fn">AVG</span>(salary) <span class="kw">AS</span> avg_salary
+<span class="kw">FROM</span> employees
+<span class="kw">GROUP BY</span> department_id
+<span class="kw">HAVING</span> <span class="fn">AVG</span>(salary) > <span class="num">50000</span>  <span class="cm">-- filter AFTER aggregation</span>
+<span class="kw">ORDER BY</span> avg_salary <span class="kw">DESC</span>;</code></pre>
+
+    <div class="key-point warn"><strong>WHERE</strong> filters rows before grouping. <strong>HAVING</strong> filters groups after aggregation. Never confuse them.</div>
+
+    <h3>ROLLUP and CUBE (Oracle Extras)</h3>
+    <pre><code><span class="cm">-- ROLLUP: subtotals at each grouping level</span>
+<span class="kw">SELECT</span> region, product, <span class="fn">SUM</span>(sales)
+<span class="kw">FROM</span> sales_data
+<span class="kw">GROUP BY</span> <span class="fn">ROLLUP</span>(region, product);
+<span class="cm">-- Returns: per region+product, per region, grand total</span>
+
+<span class="cm">-- CUBE: all possible combinations of subtotals</span>
+<span class="kw">GROUP BY</span> <span class="fn">CUBE</span>(region, product);
+<span class="cm">-- Returns: every combination + subtotals</span></code></pre>
+  </div>
+</div>
+
+<!-- LECTURE 9 -->
+<div class="section" id="l9">
+  <div class="section-header">
+    <span class="lec-badge c9">Lecture 9</span>
+    <h2>Advanced SQL (III) — Subqueries & Parameterized Queries</h2>
+  </div>
+  <div class="section-body">
+    <h3>Types of Subqueries</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Type</th><th>Returns</th><th>Operator</th></tr>
+        <tr><td>Scalar</td><td>Single value (1 row, 1 col)</td><td>=, >, &lt;, etc.</td></tr>
+        <tr><td>Multiple-row</td><td>List of values (many rows, 1 col)</td><td>IN, NOT IN, ANY, ALL</td></tr>
+        <tr><td>Correlated</td><td>References outer query's columns; re-runs per row</td><td>EXISTS, =</td></tr>
+        <tr><td>Inline View</td><td>Entire result set used as a table (in FROM)</td><td>Joins, WHERE</td></tr>
+      </table>
+    </div>
+
+    <pre><code><span class="cm">-- Scalar subquery: employees earning above average</span>
+<span class="kw">SELECT</span> name, salary <span class="kw">FROM</span> employees
+<span class="kw">WHERE</span> salary > (<span class="kw">SELECT</span> <span class="fn">AVG</span>(salary) <span class="kw">FROM</span> employees);
+
+<span class="cm">-- Multiple-row: employees in departments in NY</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> employees
+<span class="kw">WHERE</span> dept_id <span class="kw">IN</span> (<span class="kw">SELECT</span> id <span class="kw">FROM</span> departments <span class="kw">WHERE</span> city = <span class="str">'NY'</span>);
+
+<span class="cm">-- Correlated: employees who earn the max in their dept</span>
+<span class="kw">SELECT</span> name, salary, dept_id <span class="kw">FROM</span> employees e1
+<span class="kw">WHERE</span> salary = (
+  <span class="kw">SELECT</span> <span class="fn">MAX</span>(salary) <span class="kw">FROM</span> employees e2
+  <span class="kw">WHERE</span> e2.dept_id = e1.dept_id  <span class="cm">-- references outer query</span>
+);
+
+<span class="cm">-- EXISTS: departments that have at least one employee</span>
+<span class="kw">SELECT</span> name <span class="kw">FROM</span> departments d
+<span class="kw">WHERE</span> <span class="kw">EXISTS</span> (<span class="kw">SELECT</span> <span class="num">1</span> <span class="kw">FROM</span> employees <span class="kw">WHERE</span> dept_id = d.id);</code></pre>
+
+    <h3>Parameterized Queries (Bind Variables)</h3>
+    <p>Use bind variables instead of concatenating values into SQL strings — prevents SQL injection and improves performance via query plan reuse.</p>
+    <pre><code><span class="cm">-- Bad: SQL injection risk, no plan caching</span>
+query = <span class="str">"SELECT * FROM users WHERE id = "</span> + user_input;
+
+<span class="cm">-- Good: parameterized</span>
+query = <span class="str">"SELECT * FROM users WHERE id = :user_id"</span>;
+<span class="cm">-- Then bind :user_id = user_input separately</span></code></pre>
+  </div>
+</div>
+
+<!-- LECTURE 10 -->
+<div class="section" id="l10">
+  <div class="section-header">
+    <span class="lec-badge c10">Lecture 10</span>
+    <h2>PL/SQL — Procedural Extensions of SQL</h2>
+  </div>
+  <div class="section-body">
+    <h3>PL/SQL Block Structure</h3>
+    <pre><code><span class="kw">DECLARE</span>
+  <span class="cm">-- Variable declarations (optional)</span>
+  v_name  <span class="type">VARCHAR2</span>(<span class="num">50</span>);
+  v_count <span class="type">NUMBER</span> := <span class="num">0</span>;
+
+<span class="kw">BEGIN</span>
+  <span class="cm">-- Executable statements (required)</span>
+  v_name := <span class="str">'Alice'</span>;
+  v_count := v_count + <span class="num">1</span>;
+  <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'Hello, '</span> || v_name);
+
+<span class="kw">EXCEPTION</span>
+  <span class="cm">-- Error handling (optional)</span>
+  <span class="kw">WHEN OTHERS THEN</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="fn">SQLERRM</span>);
+<span class="kw">END</span>;
+/</code></pre>
+
+    <h3>Control Structures</h3>
+    <pre><code><span class="cm">-- IF-ELSIF-ELSE</span>
+<span class="kw">IF</span> score >= <span class="num">90</span> <span class="kw">THEN</span>
+  grade := <span class="str">'A'</span>;
+<span class="kw">ELSIF</span> score >= <span class="num">80</span> <span class="kw">THEN</span>
+  grade := <span class="str">'B'</span>;
+<span class="kw">ELSE</span>
+  grade := <span class="str">'C'</span>;
+<span class="kw">END IF</span>;
+
+<span class="cm">-- LOOP variants</span>
+<span class="kw">FOR</span> i <span class="kw">IN</span> <span class="num">1</span>..<span class="num">10</span> <span class="kw">LOOP</span>   <span class="cm">-- numeric for loop</span>
+  <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(i);
+<span class="kw">END LOOP</span>;
+
+<span class="kw">WHILE</span> v_count < <span class="num">5</span> <span class="kw">LOOP</span>  <span class="cm">-- while loop</span>
+  v_count := v_count + <span class="num">1</span>;
+<span class="kw">END LOOP</span>;</code></pre>
+
+    <h3>Why Use PL/SQL?</h3>
+    <div class="key-point good">Business logic lives in the DB — reduces network round trips (1 procedure call vs. 10 SQL statements).</div>
+    <div class="key-point good">Reusable, stored code — compile once, run many times from any app or schema.</div>
+    <div class="key-point good">Tight SQL integration — can loop over query results, use SQL operators natively.</div>
+    <div class="key-point warn">Tightly coupled to Oracle — harder to migrate to other DBMS.</div>
+  </div>
+</div>
+
+<!-- LECTURE 11 -->
+<div class="section" id="l11">
+  <div class="section-header">
+    <span class="lec-badge c11">Lecture 11</span>
+    <h2>Functions, Procedures, Packages & Triggers</h2>
+  </div>
+  <div class="section-body">
+    <h3>Functions vs Procedures</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th></th><th>Function</th><th>Procedure</th></tr>
+        <tr><td>Returns value?</td><td>Yes (always)</td><td>Optional (via OUT params)</td></tr>
+        <tr><td>Used in SQL?</td><td>Yes (in SELECT, WHERE)</td><td>No</td></tr>
+        <tr><td>When to use</td><td>Compute and return a value</td><td>Perform an action (DML, logic)</td></tr>
+      </table>
+    </div>
+
+    <pre><code><span class="cm">-- FUNCTION: always returns a value</span>
+<span class="kw">CREATE OR REPLACE FUNCTION</span> <span class="fn">get_annual_salary</span>(p_emp_id <span class="kw">IN</span> <span class="type">NUMBER</span>)
+<span class="kw">RETURN</span> <span class="type">NUMBER</span> <span class="kw">AS</span>
+  v_monthly <span class="type">NUMBER</span>;
+<span class="kw">BEGIN</span>
+  <span class="kw">SELECT</span> salary <span class="kw">INTO</span> v_monthly
+  <span class="kw">FROM</span> employees <span class="kw">WHERE</span> emp_id = p_emp_id;
+  <span class="kw">RETURN</span> v_monthly * <span class="num">12</span>;
+<span class="kw">END</span>;
+
+<span class="cm">-- PROCEDURE: performs action, no mandatory return</span>
+<span class="kw">CREATE OR REPLACE PROCEDURE</span> <span class="fn">give_raise</span>(
+  p_emp_id <span class="kw">IN</span> <span class="type">NUMBER</span>,
+  p_pct    <span class="kw">IN</span> <span class="type">NUMBER</span>
+) <span class="kw">AS</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">UPDATE</span> employees
+  <span class="kw">SET</span> salary = salary * (<span class="num">1</span> + p_pct/<span class="num">100</span>)
+  <span class="kw">WHERE</span> emp_id = p_emp_id;
+  <span class="kw">COMMIT</span>;
+<span class="kw">END</span>;</code></pre>
+
+    <h3>Packages</h3>
+    <p>A package groups related functions, procedures, types, and variables into a named unit with two parts:</p>
+    <pre><code><span class="cm">-- Package SPEC (public interface)</span>
+<span class="kw">CREATE OR REPLACE PACKAGE</span> emp_pkg <span class="kw">AS</span>
+  <span class="kw">FUNCTION</span>  <span class="fn">get_salary</span>(p_id <span class="type">NUMBER</span>) <span class="kw">RETURN</span> <span class="type">NUMBER</span>;
+  <span class="kw">PROCEDURE</span> <span class="fn">update_salary</span>(p_id <span class="type">NUMBER</span>, p_amount <span class="type">NUMBER</span>);
+<span class="kw">END</span> emp_pkg;
+
+<span class="cm">-- Package BODY (implementation)</span>
+<span class="kw">CREATE OR REPLACE PACKAGE BODY</span> emp_pkg <span class="kw">AS</span>
+  <span class="kw">FUNCTION</span> <span class="fn">get_salary</span>(p_id <span class="type">NUMBER</span>) <span class="kw">RETURN</span> <span class="type">NUMBER</span> <span class="kw">AS</span>
+    v_sal <span class="type">NUMBER</span>;
+  <span class="kw">BEGIN</span>
+    <span class="kw">SELECT</span> salary <span class="kw">INTO</span> v_sal <span class="kw">FROM</span> employees <span class="kw">WHERE</span> id = p_id;
+    <span class="kw">RETURN</span> v_sal;
+  <span class="kw">END</span>;
+  <span class="cm">-- ... other subprograms ...</span>
+<span class="kw">END</span> emp_pkg;</code></pre>
+
+    <h3>Triggers</h3>
+    <p>A trigger automatically fires when a DML event occurs on a table.</p>
+    <pre><code><span class="cm">-- Log whenever an employee's salary changes</span>
+<span class="kw">CREATE OR REPLACE TRIGGER</span> salary_audit_trg
+<span class="kw">AFTER UPDATE OF</span> salary <span class="kw">ON</span> employees
+<span class="kw">FOR EACH ROW</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">INSERT INTO</span> salary_log (emp_id, old_sal, new_sal, changed_on)
+  <span class="kw">VALUES</span> (:OLD.emp_id, :OLD.salary, :NEW.salary, <span class="fn">SYSDATE</span>);
+<span class="kw">END</span>;</code></pre>
+    <div class="key-point warn">Use triggers for cross-cutting concerns (auditing, logging). Don't put core business logic in triggers — it becomes invisible and hard to debug.</div>
+  </div>
+</div>
+
+<!-- LECTURE 12 -->
+<div class="section" id="l12">
+  <div class="section-header">
+    <span class="lec-badge c12">Lecture 12</span>
+    <h2>Anonymous Blocks & Basic PL/SQL Features</h2>
+  </div>
+  <div class="section-body">
+    <h3>Anonymous Block vs Named Block</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th></th><th>Anonymous Block</th><th>Named Block (Function/Procedure)</th></tr>
+        <tr><td>Stored in DB?</td><td>No — runs once and is gone</td><td>Yes — compiled and stored</td></tr>
+        <tr><td>Reusable?</td><td>No</td><td>Yes, callable by name</td></tr>
+        <tr><td>Use case</td><td>One-time scripts, testing</td><td>Application logic, reuse</td></tr>
+      </table>
+    </div>
+
+    <pre><code><span class="cm">-- Complete anonymous block example</span>
+<span class="kw">DECLARE</span>
+  v_emp_name  <span class="type">employees.name%TYPE</span>;  <span class="cm">-- anchored type</span>
+  v_salary    <span class="type">employees.salary%TYPE</span>;
+<span class="kw">BEGIN</span>
+  <span class="kw">SELECT</span> name, salary
+  <span class="kw">INTO</span>  v_emp_name, v_salary
+  <span class="kw">FROM</span>  employees
+  <span class="kw">WHERE</span> emp_id = <span class="num">101</span>;
+
+  <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(v_emp_name || <span class="str">' earns '</span> || v_salary);
+<span class="kw">EXCEPTION</span>
+  <span class="kw">WHEN NO_DATA_FOUND THEN</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'Employee not found'</span>);
+<span class="kw">END</span>;
+/</code></pre>
+
+    <h3>Anchored Types</h3>
+    <div class="key-point good"><code>col%TYPE</code> — declares a variable with the same type as a column. If the column type changes, the variable adapts automatically.</div>
+    <div class="key-point good"><code>table%ROWTYPE</code> — declares a record that matches the structure of an entire table row.</div>
+
+    <pre><code><span class="kw">DECLARE</span>
+  emp_rec employees<span class="kw">%ROWTYPE</span>;  <span class="cm">-- holds one entire employee row</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">SELECT</span> * <span class="kw">INTO</span> emp_rec <span class="kw">FROM</span> employees <span class="kw">WHERE</span> emp_id = <span class="num">101</span>;
+  <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(emp_rec.name);
+<span class="kw">END</span>;</code></pre>
+  </div>
+</div>
+
+<!-- LECTURE 13 -->
+<div class="section" id="l13">
+  <div class="section-header">
+    <span class="lec-badge c13">Lecture 13</span>
+    <h2>Exception Handling in PL/SQL</h2>
+  </div>
+  <div class="section-body">
+    <h3>Exception Types</h3>
+    <div class="concept-grid">
+      <div class="concept-card">
+        <div class="term" style="color:#4f9cf9">Predefined Internal</div>
+        <p>Auto-raised by Oracle. Already named: <code>NO_DATA_FOUND</code>, <code>TOO_MANY_ROWS</code>, <code>ZERO_DIVIDE</code>, <code>VALUE_ERROR</code>.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term" style="color:#a78bfa">Non-predefined Internal</div>
+        <p>Oracle raises them (ORA-xxxxx errors) but they don't have names. Use <code>EXCEPTION_INIT</code> pragma to name them.</p>
+      </div>
+      <div class="concept-card">
+        <div class="term" style="color:#34d399">User-Defined</div>
+        <p>Declared by you, raised explicitly with <code>RAISE</code>. e.g., <code>insufficient_funds EXCEPTION;</code></p>
+      </div>
+    </div>
+
+    <pre><code><span class="cm">-- Full exception handling example</span>
+<span class="kw">DECLARE</span>
+  v_balance   <span class="type">NUMBER</span>;
+  insufficient_funds <span class="kw">EXCEPTION</span>;  <span class="cm">-- user-defined</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">SELECT</span> balance <span class="kw">INTO</span> v_balance <span class="kw">FROM</span> accounts <span class="kw">WHERE</span> id = <span class="num">1</span>;
+
+  <span class="kw">IF</span> v_balance < <span class="num">100</span> <span class="kw">THEN</span>
+    <span class="kw">RAISE</span> insufficient_funds;  <span class="cm">-- explicit raise</span>
+  <span class="kw">END IF</span>;
+
+<span class="kw">EXCEPTION</span>
+  <span class="kw">WHEN</span> NO_DATA_FOUND <span class="kw">THEN</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'Account not found'</span>);
+  <span class="kw">WHEN</span> insufficient_funds <span class="kw">THEN</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'Balance too low'</span>);
+  <span class="kw">WHEN OTHERS THEN</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'Error: '</span> || <span class="fn">SQLERRM</span>);
+<span class="kw">END</span>;</code></pre>
+
+    <h3>Key Predefined Exceptions</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Exception</th><th>When Raised</th></tr>
+        <tr><td>NO_DATA_FOUND</td><td>SELECT INTO returns zero rows</td></tr>
+        <tr><td>TOO_MANY_ROWS</td><td>SELECT INTO returns more than one row</td></tr>
+        <tr><td>ZERO_DIVIDE</td><td>Division by zero</td></tr>
+        <tr><td>VALUE_ERROR</td><td>Conversion or size constraint violation</td></tr>
+        <tr><td>DUP_VAL_ON_INDEX</td><td>Inserting a duplicate into a unique-indexed column</td></tr>
+        <tr><td>OTHERS</td><td>Catch-all — any unhandled exception</td></tr>
+      </table>
+    </div>
+
+    <div class="key-point good">Use named exceptions (<code>WHEN NO_DATA_FOUND</code>) over <code>WHEN OTHERS</code> whenever possible — better precision and debugging.</div>
+    <div class="key-point warn">In exception handlers, decide explicitly whether to COMMIT, ROLLBACK, or continue — never leave the DB in a partial state.</div>
+  </div>
+</div>
+
+<!-- LECTURE 14 -->
+<div class="section" id="l14">
+  <div class="section-header">
+    <span class="lec-badge c14">Lecture 14</span>
+    <h2>Handling Queries with Explicit Cursors</h2>
+  </div>
+  <div class="section-body">
+    <h3>Implicit vs Explicit Cursors</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th></th><th>Implicit Cursor</th><th>Explicit Cursor</th></tr>
+        <tr><td>Created by</td><td>Oracle automatically</td><td>You declare it</td></tr>
+        <tr><td>For</td><td>Any single DML/SELECT</td><td>Multi-row SELECT results</td></tr>
+        <tr><td>Control</td><td>Via sql%rowcount, sql%found</td><td>OPEN, FETCH, CLOSE</td></tr>
+      </table>
+    </div>
+
+    <h3>Implicit Cursor Attributes</h3>
+    <pre><code><span class="kw">BEGIN</span>
+  <span class="kw">UPDATE</span> employees <span class="kw">SET</span> salary = salary * <span class="num">1.1</span>
+  <span class="kw">WHERE</span> dept_id = <span class="num">10</span>;
+
+  <span class="kw">IF</span> SQL%FOUND <span class="kw">THEN</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'Updated: '</span> || SQL%ROWCOUNT || <span class="str">' rows'</span>);
+  <span class="kw">ELSE</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(<span class="str">'No rows matched'</span>);
+  <span class="kw">END IF</span>;
+<span class="kw">END</span>;</code></pre>
+
+    <h3>Explicit Cursor — Full Lifecycle</h3>
+    <pre><code><span class="kw">DECLARE</span>
+  <span class="cm">-- 1. DECLARE the cursor</span>
+  <span class="kw">CURSOR</span> emp_cur <span class="kw">IS</span>
+    <span class="kw">SELECT</span> emp_id, name, salary <span class="kw">FROM</span> employees <span class="kw">WHERE</span> dept_id = <span class="num">10</span>;
+
+  v_emp emp_cur<span class="kw">%ROWTYPE</span>;  <span class="cm">-- row variable matching cursor structure</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">OPEN</span> emp_cur;         <span class="cm">-- 2. OPEN: execute the query</span>
+  <span class="kw">LOOP</span>
+    <span class="kw">FETCH</span> emp_cur <span class="kw">INTO</span> v_emp;  <span class="cm">-- 3. FETCH: get next row</span>
+    <span class="kw">EXIT WHEN</span> emp_cur%NOTFOUND; <span class="cm">-- stop when no more rows</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(v_emp.name || <span class="str">': '</span> || v_emp.salary);
+  <span class="kw">END LOOP</span>;
+  <span class="kw">CLOSE</span> emp_cur;        <span class="cm">-- 4. CLOSE: free memory</span>
+<span class="kw">END</span>;
+
+<span class="cm">-- Shortcut: FOR loop cursor (auto open/fetch/close)</span>
+<span class="kw">BEGIN</span>
+  <span class="kw">FOR</span> emp <span class="kw">IN</span> (<span class="kw">SELECT</span> * <span class="kw">FROM</span> employees <span class="kw">WHERE</span> dept_id = <span class="num">10</span>) <span class="kw">LOOP</span>
+    <span class="fn">DBMS_OUTPUT.PUT_LINE</span>(emp.name);
+  <span class="kw">END LOOP</span>;
+<span class="kw">END</span>;</code></pre>
+
+    <h3>Cursor Attributes</h3>
+    <div class="concept-grid">
+      <div class="concept-card"><div class="term"><code>%FOUND</code></div><p>TRUE if last FETCH returned a row.</p></div>
+      <div class="concept-card"><div class="term"><code>%NOTFOUND</code></div><p>TRUE if last FETCH returned no row.</p></div>
+      <div class="concept-card"><div class="term"><code>%ROWCOUNT</code></div><p>Number of rows fetched so far.</p></div>
+      <div class="concept-card"><div class="term"><code>%ISOPEN</code></div><p>TRUE if the cursor is currently open.</p></div>
+    </div>
+    <div class="key-point good">The FOR loop cursor is almost always preferred — it's shorter, safer (auto-closes), and less error-prone.</div>
+  </div>
+</div>
+
+<!-- CHEAT SHEET -->
+<div class="cheatsheet" id="cheatsheet">
+  <div class="cheatsheet-header">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">// reference</div>
+    <h2>⚡ Advanced Databases — Cheat Sheet</h2>
+  </div>
+  <div class="cheatsheet-body">
+
+    <div class="cs-card">
+      <div class="cs-card-header c1">Architecture & Abstraction</div>
+      <div class="cs-card-body">
+        <p><strong>3 Levels:</strong> Physical (how stored) → Logical (what exists) → View (what user sees)</p>
+        <p><strong>Schema</strong> = design; <strong>Instance</strong> = current data at one moment</p>
+        <p><strong>DBMS advantages:</strong> reduced redundancy, consistency, integrity, security, independence</p>
+        <p><strong>ACID:</strong> Atomicity · Consistency · Isolation · Durability</p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c2">Security</div>
+      <div class="cs-card-body">
+        <p><strong>4 dims:</strong> Physical · Personnel · Procedural · Technical</p>
+        <p><strong>Least privilege:</strong> grant only what's needed</p>
+        <p><strong>Identity Mgmt:</strong> centralized control of users/rights across all systems</p>
+        <p><strong>GRANT table TO user; REVOKE table FROM user;</strong></p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c3">Transactions & Locking (Oracle)</div>
+      <div class="cs-card-body">
+        <p><strong>Readers never block writers</strong> and vice versa in Oracle</p>
+        <p><strong>Row locks are free</strong> — no overhead regardless of count</p>
+        <p>COMMIT when business logic says so; ROLLBACK on error</p>
+        <p>Never manually escalate to table locks for "performance"</p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c4">OLTP vs OLAP</div>
+      <div class="cs-card-body">
+        <p><strong>OLTP:</strong> current data, short transactions, ER model, daily ops</p>
+        <p><strong>OLAP:</strong> historical, read-heavy, star/snowflake, analytics</p>
+        <p><strong>Data Warehouse:</strong> Subject-Oriented · Integrated · Time-Variant · Non-Volatile</p>
+        <p><strong>OLAP ops:</strong> Roll-up ↑ · Drill-down ↓ · Slice (1 dim) · Dice (N dims)</p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c5">Relational Model</div>
+      <div class="cs-card-body">
+        <p>Relation=Table · Tuple=Row · Attribute=Column</p>
+        <p><strong>PK</strong> = unique per row; <strong>FK</strong> = references another table's PK</p>
+        <p><strong>1NF:</strong> atomic values · <strong>2NF:</strong> no partial deps · <strong>3NF:</strong> no transitive deps</p>
+        <p>Rows & columns have no inherent order — a relation is a set</p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c7">SQL Joins</div>
+      <div class="cs-card-body">
+        <p><strong>INNER:</strong> matching rows only · <strong>LEFT:</strong> all left + matched right</p>
+        <p><strong>FULL OUTER:</strong> all rows from both · <strong>CROSS:</strong> Cartesian product</p>
+        <p><strong>CTE:</strong> <code>WITH name AS (SELECT ...)</code> — named subquery for readability</p>
+        <p><strong>Window fn:</strong> <code>SUM() OVER (PARTITION BY ... ORDER BY ...)</code></p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c8">Aggregation</div>
+      <div class="cs-card-body">
+        <p><strong>Functions:</strong> COUNT · SUM · AVG · MAX · MIN</p>
+        <p><strong>WHERE</strong> = filter before grouping; <strong>HAVING</strong> = filter after grouping</p>
+        <p><strong>ROLLUP:</strong> subtotals at each group level + grand total</p>
+        <p><strong>CUBE:</strong> all possible grouping combinations</p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c9">Subqueries</div>
+      <div class="cs-card-body">
+        <p><strong>Scalar</strong> → returns 1 value, use with =, &gt;, &lt;</p>
+        <p><strong>Multi-row</strong> → returns list, use with IN / ANY / ALL</p>
+        <p><strong>Correlated</strong> → references outer query, re-runs per outer row</p>
+        <p><strong>EXISTS</strong> → true if subquery returns any row (fast!)</p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c10">PL/SQL Basics</div>
+      <div class="cs-card-body">
+        <p><strong>Structure:</strong> DECLARE → BEGIN → [EXCEPTION] → END;</p>
+        <p><strong>Assign:</strong> <code>v := value;</code> &nbsp; <strong>String concat:</strong> <code>||</code></p>
+        <p><strong>IF/ELSIF/ELSE/END IF</strong> · <strong>FOR i IN 1..n LOOP</strong> · <strong>WHILE cond LOOP</strong></p>
+        <p><strong>Anchored types:</strong> col<code>%TYPE</code> · table<code>%ROWTYPE</code></p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c11">Functions, Procedures, Packages</div>
+      <div class="cs-card-body">
+        <p><strong>Function:</strong> returns a value, usable in SQL queries</p>
+        <p><strong>Procedure:</strong> performs actions, no mandatory return</p>
+        <p><strong>Package SPEC:</strong> public interface · <strong>BODY:</strong> implementation</p>
+        <p>Parameters: <strong>IN</strong> (read) · <strong>OUT</strong> (write) · <strong>IN OUT</strong> (read-write)</p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c13">Exception Handling</div>
+      <div class="cs-card-body">
+        <p><strong>Predefined:</strong> NO_DATA_FOUND · TOO_MANY_ROWS · ZERO_DIVIDE · VALUE_ERROR · DUP_VAL_ON_INDEX</p>
+        <p><strong>User-defined:</strong> declare in DECLARE, raise with <code>RAISE my_exc;</code></p>
+        <p><strong>WHEN OTHERS:</strong> catch-all; use <code>SQLERRM</code> to get message</p>
+        <p>Always decide: COMMIT / ROLLBACK / continue in handler</p>
+      </div>
+    </div>
+
+    <div class="cs-card">
+      <div class="cs-card-header c14">Cursors</div>
+      <div class="cs-card-body">
+        <p><strong>Implicit:</strong> auto-created per SQL statement; check <code>SQL%FOUND</code>, <code>SQL%ROWCOUNT</code></p>
+        <p><strong>Explicit lifecycle:</strong> DECLARE → OPEN → FETCH → EXIT WHEN %NOTFOUND → CLOSE</p>
+        <p><strong>Best practice:</strong> use <code>FOR rec IN (SELECT ...) LOOP</code> — auto manages cursor</p>
+        <p>Attributes: %FOUND · %NOTFOUND · %ROWCOUNT · %ISOPEN</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+// Smooth active nav highlighting
+const sections = document.querySelectorAll('.section, .cheatsheet');
+const navLinks = document.querySelectorAll('nav a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + id ? 'var(--accent)' : '';
+        a.style.background = a.getAttribute('href') === '#' + id ? 'rgba(79,156,249,0.08)' : '';
+      });
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
+</div><!-- .page-content -->
+
+</body>
+</html>

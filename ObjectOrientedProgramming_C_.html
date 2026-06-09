@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOP in C# — Complete Cheat Sheet</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:       #0d0f14;
+  --surface:  #13161e;
+  --card:     #1a1e2a;
+  --border:   #252a38;
+  --accent:   #a78bfa;
+  --text:     #e2e8f0;
+  --muted:    #8892a4;
+  --code-bg:  #0a0c12;
+  --keyword: #c792ea;
+  --type:    #82aaff;
+  --string:  #c3e88d;
+  --comment: #546e7a;
+  --number:  #f78c6c;
+  --method:  #82aaff;
+  --accent2: #fa6d6d;
+  --accent3: #6dfabd;
+  --accent4: #fac96d;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+.crossnav {
+  background: #080a0f;
+  border-bottom: 1px solid #1a1d2a;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 40px;
+  flex-shrink: 0;
+}
+.crossnav::-webkit-scrollbar { display: none; }
+.crossnav-label {
+  color: rgba(255,255,255,0.22);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0 12px 0 0;
+  border-right: 1px solid #1e2235;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.crossnav a {
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.crossnav a:hover {
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+}
+.crossnav a.active {
+  color: #fff;
+  background: rgba(79,142,247,0.14);
+  border-color: rgba(79,142,247,0.32);
+}
+
+.page-header {
+  background: linear-gradient(160deg, #0d0f14 0%, #111520 60%, #0d0f14 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 44px 32px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, color-mix(in srgb, #a78bfa 8%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-header-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.page-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  opacity: 0.85;
+}
+.page-header h1 {
+  font-size: clamp(24px, 3.5vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.page-header h1 span { color: var(--accent); }
+.page-header p {
+  color: var(--muted);
+  font-size: 13.5px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+.page-nav {
+  background: rgba(13,15,20,0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 40px;
+  z-index: 100;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.page-nav::-webkit-scrollbar { display: none; }
+.page-nav-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0;
+  white-space: nowrap;
+}
+.page-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.page-nav a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+  border-color: var(--border);
+}
+
+.page-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+}
+
+h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c8d0e0;
+}
+pre, code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--code-bg);
+  border: 1px solid #1e2235;
+  border-radius: 6px;
+  color: #c8d0e0;
+}
+pre { padding: 14px; overflow-x: auto; line-height: 1.55; }
+code { padding: 1px 6px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 700px) {
+  .page-header { padding: 32px 16px 28px; }
+  .page-nav { padding: 0 12px; }
+  .page-content { padding: 20px 16px 60px; }
+}
+
+  .section {
+    margin-bottom: 3.5rem;
+    scroll-margin-top: 100px;
+  }
+  .section-title {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-title .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--accent); font-weight: 700;
+    background: rgba(167,139,250,0.12);
+    padding: 3px 9px; border-radius: 4px;
+  }
+  .section-title h2 {
+    font-size: 1.35rem; font-weight: 700; color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .section-title .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: #6dfabd;
+    margin-left: auto;
+    background: rgba(109,250,189,0.08);
+    padding: 2px 8px; border-radius: 4px;
+    border: 1px solid rgba(109,250,189,0.2);
+  }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 1.25rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card h3 {
+    font-size: 0.82rem; font-weight: 700;
+    color: #fac96d;
+    margin-bottom: 0.65rem;
+    display: flex; align-items: center; gap: 0.4rem;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .card h3 .icon { font-style: normal; }
+  .card p { color: var(--muted); font-size: 0.85rem; margin-bottom: 0.5rem; line-height: 1.6; }
+  .card p strong { color: var(--text); }
+  .card ul { color: var(--muted); font-size: 0.84rem; padding-left: 1.2rem; }
+  .card ul li { margin-bottom: 0.3rem; line-height: 1.55; }
+  .card ul li strong { color: var(--text); }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid #1e2235;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.65;
+    margin: 0.75rem 0;
+  }
+  .kw { color: #c792ea; }
+  .ty { color: #82aaff; }
+  .st { color: #c3e88d; }
+  .co { color: #546e7a; font-style: italic; }
+  .nu { color: #f78c6c; }
+  .me { color: #82aaff; }
+
+  .concept {
+    background: var(--card);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+  }
+  .concept.green { border-color: #6dfabd; }
+  .concept.red   { border-color: #fa6d6d; }
+  .concept.yellow{ border-color: #fac96d; }
+  .concept strong { color: var(--text); display: block; margin-bottom: 0.2rem; }
+  .concept span { color: var(--muted); }
+
+  .mod-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 0.5rem; }
+  .mod-table th {
+    background: rgba(167,139,250,0.1);
+    color: var(--accent); font-size: 0.72rem;
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 6px 10px; text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .mod-table td {
+    padding: 6px 10px; border-bottom: 1px solid rgba(37,42,56,0.7);
+    color: var(--muted);
+  }
+  .mod-table td:first-child {
+    font-family: 'JetBrains Mono', monospace;
+    color: #c792ea; font-size: 0.78rem;
+  }
+  .mod-table tr:last-child td { border-bottom: none; }
+  .tick { color: #6dfabd; }
+  .cross { color: #fa6d6d; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+  .pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; padding: 3px 9px;
+    border-radius: 4px; background: rgba(167,139,250,0.1);
+    border: 1px solid rgba(167,139,250,0.25); color: var(--accent);
+  }
+  .pill.green  { background: rgba(109,250,189,0.08); border-color: rgba(109,250,189,0.2); color: #6dfabd; }
+  .pill.yellow { background: rgba(250,201,109,0.08); border-color: rgba(250,201,109,0.2); color: #fac96d; }
+  .pill.red    { background: rgba(250,109,109,0.08); border-color: rgba(250,109,109,0.2); color: #fa6d6d; }
+
+  .callout {
+    background: rgba(167,139,250,0.07);
+    border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 8px; padding: 0.85rem 1.2rem;
+    margin-top: 0.75rem; font-size: 0.83rem; color: var(--muted);
+  }
+  .callout.warn { background: rgba(250,201,109,0.07); border-color: rgba(250,201,109,0.2); }
+  .callout strong { color: var(--text); }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+
+  @media (max-width: 700px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="crossnav">
+  <a href="index.html" style="color:rgba(255,255,255,0.25);font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid transparent;text-decoration:none;transition:all .15s;flex-shrink:0;" onmouseover="this.style.color='rgba(255,255,255,0.65)';this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'" onmouseout="this.style.color='rgba(255,255,255,0.25)';this.style.background='';this.style.borderColor='transparent'">⌂</a>
+  <span class="crossnav-label">Notes</span>
+    <a href="BigDataFundamentals.html">🗄️ Big Data</a>
+    <a href="ProgrammingInJAVA.html">☕ Java</a>
+    <a href="ObjectOrientedProgramming_C_.html" class="active">🔷 OOP C#</a>
+    <a href="AdvancedDatabases.html">🗃️ Databases</a>
+    <a href="SoftwarePackages.html">📦 Packages</a>
+</div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-label">ULBS · OOP in C#</div>
+    <h1>OOP in <span>C#</span> Cheat Sheet</h1>
+    <p>Everything you need to understand Object-Oriented Programming in C#, fast. Based on all 14 lectures.</p>
+  </div>
+</div>
+
+<div class="page-nav">
+  <div class="page-nav-inner">
+    <a href="#pillars">Pillars</a>
+    <a href="#classes">Classes</a>
+    <a href="#encapsulation">Encapsulation</a>
+    <a href="#inheritance">Inheritance</a>
+    <a href="#polymorphism">Polymorphism</a>
+    <a href="#abstraction">Abstraction</a>
+    <a href="#interfaces">Interfaces</a>
+    <a href="#methods">Methods</a>
+    <a href="#types">Types</a>
+    <a href="#overloading">Overloading</a>
+    <a href="#design">Design</a>
+  </div>
+</div>
+
+<div class="page-content">
+  <div class="section" id="pillars">
+    <div class="section-title">
+      <span class="num">01</span>
+      <h2>The 4 Pillars of OOP</h2>
+      <span class="tag">core concepts</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3><span class="icon">🔒</span> Encapsulation</h3>
+        <p><strong>Hide the internals, expose only what's needed.</strong> A class bundles data (fields) and behavior (methods) together and controls access to them via access modifiers.</p>
+        <p style="color:var(--accent3); font-size:0.82rem; margin-top:0.4rem">Think of it like a TV remote: you press buttons (public interface), you don't need to know the electronics inside (private implementation).</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">🧬</span> Inheritance</h3>
+        <p><strong>A child class reuses code from a parent class.</strong> "Lion is a Felidae" — Lion gets all features of Felidae automatically.</p>
+        <p style="color:var(--accent3); font-size:0.82rem; margin-top:0.4rem">Keyword: <code style="color:var(--keyword)">:</code> — In C# a class can only inherit ONE parent (single inheritance).</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">🎭</span> Polymorphism</h3>
+        <p><strong>The same method name behaves differently depending on the object.</strong> A variable of type <em>Animal</em> can hold a Dog, a Cat or a Bird, and each will run its own <code>Speak()</code>.</p>
+        <p style="color:var(--accent3); font-size:0.82rem; margin-top:0.4rem">Keywords: <code style="color:var(--keyword)">virtual</code>, <code style="color:var(--keyword)">override</code></p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">🌫️</span> Abstraction</h3>
+        <p><strong>Show only relevant details, hide complexity.</strong> Abstract classes and interfaces define WHAT to do without saying HOW. Derived classes fill in the how.</p>
+        <p style="color:var(--accent3); font-size:0.82rem; margin-top:0.4rem">Keywords: <code style="color:var(--keyword)">abstract</code>, <code style="color:var(--keyword)">interface</code></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="classes">
+    <div class="section-title">
+      <span class="num">02</span>
+      <h2>Classes &amp; Objects</h2>
+      <span class="tag">blueprint vs instance</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>What is a Class?</h3>
+        <p>A <strong>class</strong> is a blueprint / template. It defines what data (fields) and behaviors (methods) an object of that type will have.</p>
+        <pre><span class="kw">public class</span> <span class="ty">Animal</span>
+{
+    <span class="co">// Fields (data)</span>
+    <span class="kw">private</span> <span class="ty">string</span> name;
+    <span class="kw">private</span> <span class="ty">int</span> age;
+
+    <span class="co">// Constructor</span>
+    <span class="kw">public</span> <span class="ty">Animal</span>(<span class="ty">string</span> name, <span class="ty">int</span> age)
+    {
+        <span class="kw">this</span>.name = name;
+        <span class="kw">this</span>.age = age;
+    }
+
+    <span class="co">// Method (behavior)</span>
+    <span class="kw">public void</span> <span class="me">Speak</span>()
+    {
+        <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">$"Hi, I'm {name}"</span>);
+    }
+}</pre>
+      </div>
+      <div class="card">
+        <h3>What is an Object?</h3>
+        <p>An <strong>object</strong> is a concrete instance of a class, created with <code style="color:var(--keyword)">new</code>. Each object has its own copy of the fields.</p>
+        <pre><span class="co">// Creating objects (instantiation)</span>
+<span class="ty">Animal</span> cat = <span class="kw">new</span> <span class="ty">Animal</span>(<span class="st">"Whiskers"</span>, <span class="nu">3</span>);
+<span class="ty">Animal</span> dog = <span class="kw">new</span> <span class="ty">Animal</span>(<span class="st">"Rex"</span>, <span class="nu">5</span>);
+
+<span class="co">// Calling a method</span>
+cat.<span class="me">Speak</span>();  <span class="co">// Hi, I'm Whiskers</span>
+dog.<span class="me">Speak</span>();  <span class="co">// Hi, I'm Rex</span>
+
+<span class="co">// 'this' refers to the current object instance</span></pre>
+        <div class="callout">
+          <strong>Class vs Object:</strong> Class = cookie cutter &nbsp;|&nbsp; Object = the actual cookie
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:1.25rem">
+      <div class="card">
+        <h3>Constructors</h3>
+        <p>Special method that runs when an object is created. Same name as the class, no return type.</p>
+        <pre><span class="kw">public class</span> <span class="ty">Person</span>
+{
+    <span class="kw">public</span> <span class="ty">string</span> Name;
+    <span class="kw">public</span> <span class="ty">int</span> Age;
+
+    <span class="co">// Default constructor (no params)</span>
+    <span class="kw">public</span> <span class="ty">Person</span>()
+    {
+        Name = <span class="st">"Unknown"</span>;
+        Age = <span class="nu">0</span>;
+    }
+
+    <span class="co">// Parameterized constructor</span>
+    <span class="kw">public</span> <span class="ty">Person</span>(<span class="ty">string</span> name, <span class="ty">int</span> age)
+    {
+        Name = name;
+        Age = age;
+    }
+}</pre>
+        <div class="callout warn">
+          If you define no constructor, C# auto-generates a default one that sets numbers → 0, strings → null.
+        </div>
+      </div>
+      <div class="card">
+        <h3>Properties (Getters &amp; Setters)</h3>
+        <p>Properties are the clean C# way to read/write private fields.</p>
+        <pre><span class="kw">public class</span> <span class="ty">BankAccount</span>
+{
+    <span class="kw">private</span> <span class="ty">decimal</span> balance;
+
+    <span class="co">// Full property</span>
+    <span class="kw">public</span> <span class="ty">decimal</span> Balance
+    {
+        <span class="kw">get</span> { <span class="kw">return</span> balance; }
+        <span class="kw">set</span>
+        {
+            <span class="kw">if</span> (<span class="kw">value</span> >= <span class="nu">0</span>) balance = <span class="kw">value</span>;
+        }
+    }
+
+    <span class="co">// Auto-property (shorthand)</span>
+    <span class="kw">public</span> <span class="ty">string</span> Owner { <span class="kw">get</span>; <span class="kw">set</span>; }
+}
+
+<span class="co">// Usage</span>
+<span class="ty">BankAccount</span> acc = <span class="kw">new</span> <span class="ty">BankAccount</span>();
+acc.Balance = <span class="nu">500m</span>;   <span class="co">// calls setter</span>
+<span class="ty">Console</span>.<span class="me">WriteLine</span>(acc.Balance); <span class="co">// calls getter</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="encapsulation">
+    <div class="section-title">
+      <span class="num">03</span>
+      <h2>Encapsulation &amp; Access Modifiers</h2>
+      <span class="tag">visibility</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Access Modifiers at a Glance</h3>
+        <table class="mod-table">
+          <tr>
+            <th>Modifier</th>
+            <th>Same Class</th>
+            <th>Subclass</th>
+            <th>Same Project</th>
+            <th>Anywhere</th>
+          </tr>
+          <tr>
+            <td>public</td>
+            <td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td>
+          </tr>
+          <tr>
+            <td>protected</td>
+            <td class="tick">✓</td><td class="tick">✓</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>internal</td>
+            <td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>private</td>
+            <td class="tick">✓</td><td class="cross">✗</td><td class="cross">✗</td><td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>protected internal</td>
+            <td class="tick">✓</td><td class="tick">✓</td><td class="tick">✓</td><td class="cross">✗</td>
+          </tr>
+        </table>
+        <div class="callout" style="margin-top:0.75rem">
+          <strong>Rule of thumb:</strong> make everything <code style="color:var(--keyword)">private</code> by default, and only open up what needs to be used from outside.
+        </div>
+      </div>
+      <div class="card">
+        <h3>Encapsulation Example</h3>
+        <pre><span class="kw">public class</span> <span class="ty">Student</span>
+{
+    <span class="co">// Private — nobody can set directly</span>
+    <span class="kw">private</span> <span class="ty">int</span> grade;
+
+    <span class="co">// Public property with validation</span>
+    <span class="kw">public</span> <span class="ty">int</span> Grade
+    {
+        <span class="kw">get</span> { <span class="kw">return</span> grade; }
+        <span class="kw">set</span>
+        {
+            <span class="kw">if</span> (<span class="kw">value</span> >= <span class="nu">1</span> && <span class="kw">value</span> <= <span class="nu">10</span>)
+                grade = <span class="kw">value</span>;
+            <span class="kw">else</span>
+                <span class="kw">throw new</span> <span class="ty">ArgumentException</span>(<span class="st">"Invalid grade"</span>);
+        }
+    }
+
+    <span class="co">// Read-only computed property</span>
+    <span class="kw">public</span> <span class="ty">bool</span> Passed => grade >= <span class="nu">5</span>;
+}</pre>
+        <div class="callout">
+          Without encapsulation someone could set <code>grade = 999</code>. The property setter blocks that.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="inheritance">
+    <div class="section-title">
+      <span class="num">04</span>
+      <h2>Inheritance</h2>
+      <span class="tag">is-a relationship</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Basic Inheritance</h3>
+        <pre><span class="co">// Base (parent) class</span>
+<span class="kw">public class</span> <span class="ty">Animal</span>
+{
+    <span class="kw">public</span> <span class="ty">string</span> Name { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public</span> <span class="ty">Animal</span>(<span class="ty">string</span> name) { Name = name; }
+
+    <span class="kw">public virtual void</span> <span class="me">Speak</span>()
+    {
+        <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"..."</span>);
+    }
+}
+
+<span class="co">// Derived (child) class — uses :</span>
+<span class="kw">public class</span> <span class="ty">Dog</span> : <span class="ty">Animal</span>
+{
+    <span class="kw">public</span> <span class="ty">Dog</span>(<span class="ty">string</span> name)
+        : <span class="kw">base</span>(name)  <span class="co">// calls Animal constructor</span>
+    { }
+
+    <span class="kw">public override void</span> <span class="me">Speak</span>()
+    {
+        <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">$"{Name} says: Woof!"</span>);
+    }
+}
+
+<span class="ty">Dog</span> d = <span class="kw">new</span> <span class="ty">Dog</span>(<span class="st">"Rex"</span>);
+d.<span class="me">Speak</span>(); <span class="co">// Rex says: Woof!</span></pre>
+      </div>
+      <div class="card">
+        <h3>Key Inheritance Keywords</h3>
+        <div class="concept">
+          <strong><code style="color:var(--keyword)">:</code> (colon)</strong>
+          <span>Declares that a class inherits from another. <br><code style="color:var(--type)">class Dog : Animal</code></span>
+        </div>
+        <div class="concept green">
+          <strong><code style="color:var(--keyword)">base</code></strong>
+          <span>Refers to the parent class. Used to call parent constructor or methods: <br><code style="color:var(--type)">base(name)</code> or <code style="color:var(--type)">base.Speak()</code></span>
+        </div>
+        <div class="concept yellow">
+          <strong><code style="color:var(--keyword)">virtual</code></strong>
+          <span>Marks a parent method as overridable (not overridable by default in C#).</span>
+        </div>
+        <div class="concept">
+          <strong><code style="color:var(--keyword)">override</code></strong>
+          <span>In the child class — replaces the parent's virtual method with a new implementation.</span>
+        </div>
+        <div class="concept red">
+          <strong><code style="color:var(--keyword)">sealed</code></strong>
+          <span>Prevents a class from being inherited, or prevents a method from being further overridden.</span>
+        </div>
+        <div class="concept">
+          <strong><code style="color:var(--keyword)">new</code> (method hiding)</strong>
+          <span>Hides a parent method without overriding it. The parent version is still accessible via upcast.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:1.25rem">
+      <div class="card">
+        <h3>Inheritance Chain (Transitivity)</h3>
+        <pre><span class="kw">public class</span> <span class="ty">Felidae</span>   <span class="co">// grandparent</span>
+{
+    <span class="kw">public bool</span> Male { <span class="kw">get</span>; <span class="kw">set</span>; }
+}
+<span class="kw">public class</span> <span class="ty">Lion</span> : <span class="ty">Felidae</span>  <span class="co">// parent</span>
+{
+    <span class="kw">public int</span> Weight { <span class="kw">get</span>; <span class="kw">set</span>; }
+}
+<span class="kw">public class</span> <span class="ty">AfricanLion</span> : <span class="ty">Lion</span>  <span class="co">// child</span>
+{
+    <span class="kw">public override string</span> <span class="me">ToString</span>()
+        => <span class="st">$"AfricanLion male:{Male} kg:{Weight}"</span>;
+}
+
+<span class="co">// AfricanLion has Male (from Felidae),</span>
+<span class="co">// Weight (from Lion), and ToString</span>
+<span class="ty">AfricanLion</span> lion = <span class="kw">new</span> <span class="ty">AfricanLion</span>();
+lion.Male = <span class="kw">true</span>;   <span class="co">// inherited from Felidae</span>
+lion.Weight = <span class="nu">80</span>;  <span class="co">// inherited from Lion</span></pre>
+      </div>
+      <div class="card">
+        <h3>Types of Inheritance (Concepts)</h3>
+        <div class="pill-row" style="margin-bottom:0.75rem">
+          <span class="pill green">Single</span>
+          <span class="pill">Multi-level</span>
+          <span class="pill yellow">Hierarchical</span>
+          <span class="pill red">Multiple (via interfaces only)</span>
+        </div>
+        <div class="concept green">
+          <strong>Single: A → B</strong>
+          <span>One parent, one child. Most common.</span>
+        </div>
+        <div class="concept">
+          <strong>Multi-level: A → B → C</strong>
+          <span>Chain of inheritance. C inherits from B which inherits from A.</span>
+        </div>
+        <div class="concept yellow">
+          <strong>Hierarchical: A → B, A → C</strong>
+          <span>One parent, multiple children classes.</span>
+        </div>
+        <div class="concept red">
+          <strong>Multiple classes: NOT allowed in C#</strong>
+          <span>A class can only inherit one class. Use interfaces for multiple inheritance of behavior.</span>
+        </div>
+        <div class="callout">
+          <strong>System.Object:</strong> Every class in C# implicitly inherits from <code>System.Object</code> which provides <code>ToString()</code>, <code>Equals()</code>, <code>GetHashCode()</code>.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="polymorphism">
+    <div class="section-title">
+      <span class="num">05</span>
+      <h2>Polymorphism</h2>
+      <span class="tag">many forms</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Runtime Polymorphism (Override)</h3>
+        <p>The method that runs is decided at <strong>runtime</strong> based on the actual object type, not the variable type.</p>
+        <pre><span class="kw">public class</span> <span class="ty">Shape</span>
+{
+    <span class="kw">public virtual void</span> <span class="me">Draw</span>()
+        => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Drawing shape"</span>);
+}
+<span class="kw">public class</span> <span class="ty">Circle</span> : <span class="ty">Shape</span>
+{
+    <span class="kw">public override void</span> <span class="me">Draw</span>()
+        => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Drawing circle ●"</span>);
+}
+<span class="kw">public class</span> <span class="ty">Square</span> : <span class="ty">Shape</span>
+{
+    <span class="kw">public override void</span> <span class="me">Draw</span>()
+        => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Drawing square ■"</span>);
+}
+
+<span class="co">// Polymorphism in action!</span>
+<span class="ty">Shape</span>[] shapes = { <span class="kw">new</span> <span class="ty">Circle</span>(), <span class="kw">new</span> <span class="ty">Square</span>() };
+<span class="kw">foreach</span> (<span class="ty">Shape</span> s <span class="kw">in</span> shapes)
+    s.<span class="me">Draw</span>();
+<span class="co">// Drawing circle ●</span>
+<span class="co">// Drawing square ■</span></pre>
+      </div>
+      <div class="card">
+        <h3>override vs new</h3>
+        <pre><span class="kw">public class</span> <span class="ty">Parent</span>
+{
+    <span class="kw">public virtual void</span> <span class="me">Hello</span>() => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Parent"</span>);
+}
+<span class="kw">public class</span> <span class="ty">ChildOverride</span> : <span class="ty">Parent</span>
+{
+    <span class="kw">public override void</span> <span class="me">Hello</span>() => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Child"</span>);
+}
+<span class="kw">public class</span> <span class="ty">ChildNew</span> : <span class="ty">Parent</span>
+{
+    <span class="kw">public new void</span> <span class="me">Hello</span>() => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Child"</span>);
+}
+
+<span class="ty">Parent</span> a = <span class="kw">new</span> <span class="ty">ChildOverride</span>();
+a.<span class="me">Hello</span>(); <span class="co">// "Child" ← override wins even through Parent ref</span>
+
+<span class="ty">Parent</span> b = <span class="kw">new</span> <span class="ty">ChildNew</span>();
+b.<span class="me">Hello</span>(); <span class="co">// "Parent" ← new only hides, doesn't replace</span></pre>
+        <div class="callout warn">
+          <strong>Use <code>override</code>, not <code>new</code>.</strong> <code>new</code> hides the method, it doesn't participate in polymorphism — which usually leads to bugs.
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem">
+      <div class="card">
+        <h3>Upcasting &amp; Downcasting</h3>
+        <div class="grid-2">
+          <div>
+            <pre><span class="co">// Upcasting (implicit, always safe)</span>
+<span class="ty">Dog</span> dog = <span class="kw">new</span> <span class="ty">Dog</span>(<span class="st">"Rex"</span>);
+<span class="ty">Animal</span> animal = dog;  <span class="co">// Dog → Animal, no cast needed</span>
+
+<span class="co">// Downcasting (explicit, can fail)</span>
+<span class="ty">Animal</span> a = <span class="kw">new</span> <span class="ty">Dog</span>(<span class="st">"Fido"</span>);
+<span class="ty">Dog</span> d = (<span class="ty">Dog</span>) a;  <span class="co">// OK if a is actually a Dog</span>
+
+<span class="co">// Safe downcast with 'as'</span>
+<span class="ty">Dog</span> safeD = a <span class="kw">as</span> <span class="ty">Dog</span>;  <span class="co">// returns null if it fails</span>
+
+<span class="co">// Check before casting with 'is'</span>
+<span class="kw">if</span> (a <span class="kw">is</span> <span class="ty">Dog</span> dd)
+    dd.<span class="me">Speak</span>();  <span class="co">// dd is already casted here</span></pre>
+          </div>
+          <div>
+            <div class="concept green" style="margin-bottom:0.6rem">
+              <strong>Upcasting (child → parent)</strong>
+              <span>Always safe. Implicit. You lose access to child-specific members.</span>
+            </div>
+            <div class="concept red">
+              <strong>Downcasting (parent → child)</strong>
+              <span>Explicit. Can throw <code>InvalidCastException</code> if the object isn't actually of that type. Use <code>as</code> or <code>is</code> to be safe.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="abstraction">
+    <div class="section-title">
+      <span class="num">06</span>
+      <h2>Abstraction &amp; Abstract Classes</h2>
+      <span class="tag">partial blueprint</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Abstract Class</h3>
+        <p>An abstract class is <strong>partially implemented</strong>. It can have both regular (concrete) and abstract (no body) methods. You <strong>cannot</strong> create an instance of it directly.</p>
+        <pre><span class="kw">public abstract class</span> <span class="ty">Shape</span>
+{
+    <span class="co">// Concrete method — all shapes inherit this</span>
+    <span class="kw">public void</span> <span class="me">PrintInfo</span>()
+        => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">$"Area = {GetArea()}"</span>);
+
+    <span class="co">// Abstract method — subclasses MUST implement this</span>
+    <span class="kw">public abstract double</span> <span class="me">GetArea</span>();
+}
+
+<span class="kw">public class</span> <span class="ty">Circle</span> : <span class="ty">Shape</span>
+{
+    <span class="kw">private double</span> radius;
+    <span class="kw">public</span> <span class="ty">Circle</span>(<span class="kw">double</span> r) { radius = r; }
+
+    <span class="co">// Must implement abstract method</span>
+    <span class="kw">public override double</span> <span class="me">GetArea</span>()
+        => <span class="ty">Math</span>.PI * radius * radius;
+}
+
+<span class="co">// Shape s = new Shape(); ← ERROR! Can't instantiate</span>
+<span class="ty">Shape</span> s = <span class="kw">new</span> <span class="ty">Circle</span>(<span class="nu">5</span>);
+s.<span class="me">PrintInfo</span>(); <span class="co">// Area = 78.54</span></pre>
+      </div>
+      <div class="card">
+        <h3>Abstract Class vs Interface vs Concrete Class</h3>
+        <table class="mod-table">
+          <tr>
+            <th>Feature</th>
+            <th>Concrete Class</th>
+            <th>Abstract Class</th>
+            <th>Interface</th>
+          </tr>
+          <tr>
+            <td>Can instantiate</td>
+            <td class="tick">✓</td>
+            <td class="cross">✗</td>
+            <td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Has method bodies</td>
+            <td class="tick">✓</td>
+            <td>Both</td>
+            <td style="color:var(--muted)">Default only</td>
+          </tr>
+          <tr>
+            <td>Has fields</td>
+            <td class="tick">✓</td>
+            <td class="tick">✓</td>
+            <td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Constructors</td>
+            <td class="tick">✓</td>
+            <td class="tick">✓</td>
+            <td class="cross">✗</td>
+          </tr>
+          <tr>
+            <td>Multiple inherit</td>
+            <td class="cross">✗</td>
+            <td class="cross">✗</td>
+            <td class="tick">✓</td>
+          </tr>
+        </table>
+        <div class="callout" style="margin-top:0.75rem">
+          Use <strong>abstract class</strong> when classes share code + a relationship.<br>
+          Use <strong>interface</strong> when unrelated classes need to share a contract.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="interfaces">
+    <div class="section-title">
+      <span class="num">07</span>
+      <h2>Interfaces</h2>
+      <span class="tag">pure contract</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Defining &amp; Implementing an Interface</h3>
+        <pre><span class="co">// Define a contract — what must be done</span>
+<span class="kw">public interface</span> <span class="ty">IAnimal</span>
+{
+    <span class="ty">string</span> Name { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">void</span> <span class="me">Speak</span>();       <span class="co">// no body!</span>
+    <span class="kw">void</span> <span class="me">Move</span>();
+}
+
+<span class="co">// Implement the contract — how it's done</span>
+<span class="kw">public class</span> <span class="ty">Cat</span> : <span class="ty">IAnimal</span>
+{
+    <span class="kw">public</span> <span class="ty">string</span> Name { <span class="kw">get</span>; <span class="kw">set</span>; }
+
+    <span class="kw">public void</span> <span class="me">Speak</span>()
+        => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Meow!"</span>);
+
+    <span class="kw">public void</span> <span class="me">Move</span>()
+        => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Pads silently"</span>);
+}
+
+<span class="co">// Use interface type — loosely coupled</span>
+<span class="ty">IAnimal</span> pet = <span class="kw">new</span> <span class="ty">Cat</span>();
+pet.<span class="me">Speak</span>(); <span class="co">// Meow!</span></pre>
+      </div>
+      <div class="card">
+        <h3>Multiple Interfaces</h3>
+        <p>A class can implement <strong>multiple interfaces</strong> — this is how C# does "multiple inheritance".</p>
+        <pre><span class="kw">public interface</span> <span class="ty">ISwimmable</span>
+{
+    <span class="kw">void</span> <span class="me">Swim</span>();
+}
+<span class="kw">public interface</span> <span class="ty">IFlyable</span>
+{
+    <span class="kw">void</span> <span class="me">Fly</span>();
+}
+
+<span class="co">// A duck can do both!</span>
+<span class="kw">public class</span> <span class="ty">Duck</span> : <span class="ty">IAnimal</span>, <span class="ty">ISwimmable</span>, <span class="ty">IFlyable</span>
+{
+    <span class="kw">public</span> <span class="ty">string</span> Name { <span class="kw">get</span>; <span class="kw">set</span>; }
+    <span class="kw">public void</span> <span class="me">Speak</span>()  => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Quack"</span>);
+    <span class="kw">public void</span> <span class="me">Move</span>()   => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Waddles"</span>);
+    <span class="kw">public void</span> <span class="me">Swim</span>()   => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Splashes"</span>);
+    <span class="kw">public void</span> <span class="me">Fly</span>()    => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"Flaps wings"</span>);
+}</pre>
+        <div class="callout">
+          <strong>Convention:</strong> interface names start with <code style="color:var(--accent3)">I</code> (e.g. IAnimal, IDisposable, IEnumerable).
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="methods">
+    <div class="section-title">
+      <span class="num">08</span>
+      <h2>Methods &amp; Parameters</h2>
+      <span class="tag">behavior</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Method Anatomy</h3>
+        <pre><span class="co">// [modifier] [return type] [name]([params])</span>
+<span class="kw">public static int</span> <span class="me">Add</span>(<span class="kw">int</span> a, <span class="kw">int</span> b)
+{
+    <span class="kw">return</span> a + b;
+}
+
+<span class="co">// void = returns nothing</span>
+<span class="kw">public void</span> <span class="me">PrintName</span>(<span class="ty">string</span> name)
+{
+    <span class="ty">Console</span>.<span class="me">WriteLine</span>(name);
+}
+
+<span class="co">// Expression-bodied (shorthand)</span>
+<span class="kw">public int</span> <span class="me">Square</span>(<span class="kw">int</span> x) => x * x;
+
+<span class="co">// Call examples</span>
+<span class="kw">int</span> result = <span class="me">Add</span>(<span class="nu">3</span>, <span class="nu">4</span>);   <span class="co">// result = 7</span>
+<span class="me">PrintName</span>(<span class="st">"Iulia"</span>);</pre>
+      </div>
+      <div class="card">
+        <h3>Parameter Modifiers</h3>
+        <pre><span class="co">// ref — passes by reference (must be initialized)</span>
+<span class="kw">static void</span> <span class="me">Double</span>(<span class="kw">ref int</span> x) { x *= <span class="nu">2</span>; }
+<span class="kw">int</span> n = <span class="nu">5</span>; <span class="me">Double</span>(<span class="kw">ref</span> n); <span class="co">// n is now 10</span>
+
+<span class="co">// out — returns a second value (no init needed)</span>
+<span class="kw">static void</span> <span class="me">GetMinMax</span>(<span class="kw">int</span>[] arr, <span class="kw">out int</span> min, <span class="kw">out int</span> max)
+{
+    min = arr.<span class="me">Min</span>(); max = arr.<span class="me">Max</span>();
+}
+<span class="me">GetMinMax</span>(<span class="kw">new</span>[] {<span class="nu">1</span>,<span class="nu">5</span>,<span class="nu">3</span>}, <span class="kw">out int</span> lo, <span class="kw">out int</span> hi);
+
+<span class="co">// params — variable number of arguments</span>
+<span class="kw">static int</span> <span class="me">Sum</span>(<span class="kw">params int</span>[] nums) => nums.<span class="me">Sum</span>();
+<span class="me">Sum</span>(<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>);  <span class="co">// 10</span>
+
+<span class="co">// default values</span>
+<span class="kw">static void</span> <span class="me">Greet</span>(<span class="ty">string</span> name, <span class="ty">string</span> msg = <span class="st">"Hello"</span>)
+    => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">$"{msg}, {name}!"</span>);
+<span class="me">Greet</span>(<span class="st">"Ana"</span>);          <span class="co">// Hello, Ana!</span>
+<span class="me">Greet</span>(<span class="st">"Ana"</span>, <span class="st">"Hi"</span>);   <span class="co">// Hi, Ana!</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="types">
+    <div class="section-title">
+      <span class="num">09</span>
+      <h2>Data Types in C#</h2>
+      <span class="tag">value vs reference</span>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Value Types</h3>
+        <p>Store data <strong>directly</strong> in memory. Copied when assigned.</p>
+        <div class="pill-row">
+          <span class="pill">int</span>
+          <span class="pill">long</span>
+          <span class="pill">float</span>
+          <span class="pill">double</span>
+          <span class="pill">decimal</span>
+          <span class="pill">bool</span>
+          <span class="pill">char</span>
+          <span class="pill">struct</span>
+          <span class="pill">enum</span>
+        </div>
+        <pre style="margin-top:0.75rem"><span class="kw">int</span> a = <span class="nu">5</span>;
+<span class="kw">int</span> b = a;   <span class="co">// b gets a COPY</span>
+b = <span class="nu">10</span>;      <span class="co">// a is still 5</span>
+
+<span class="kw">decimal</span> price = <span class="nu">9.99m</span>; <span class="co">// use m for decimal</span>
+<span class="kw">float</span>   pi    = <span class="nu">3.14f</span>; <span class="co">// use f for float</span>
+<span class="kw">bool</span>    flag  = <span class="kw">true</span>;
+<span class="kw">char</span>    ch    = <span class="st">'A'</span>;</pre>
+      </div>
+      <div class="card">
+        <h3>Reference Types</h3>
+        <p>Store a <strong>reference (address)</strong> to data on the heap. Multiple variables can point to the same object.</p>
+        <div class="pill-row">
+          <span class="pill green">class</span>
+          <span class="pill green">string</span>
+          <span class="pill green">object</span>
+          <span class="pill green">array</span>
+          <span class="pill green">interface</span>
+          <span class="pill green">delegate</span>
+        </div>
+        <pre style="margin-top:0.75rem"><span class="kw">class</span> <span class="ty">Person</span> { <span class="kw">public string</span> Name; }
+
+<span class="ty">Person</span> p1 = <span class="kw">new</span> <span class="ty">Person</span> { Name = <span class="st">"Alice"</span> };
+<span class="ty">Person</span> p2 = p1;       <span class="co">// p2 points to SAME object</span>
+p2.Name = <span class="st">"Bob"</span>;
+<span class="ty">Console</span>.<span class="me">WriteLine</span>(p1.Name); <span class="co">// "Bob" !</span></pre>
+      </div>
+      <div class="card">
+        <h3>Boxing &amp; Unboxing</h3>
+        <p>Converting between value types and <code>object</code>.</p>
+        <pre><span class="co">// Boxing — value type → object</span>
+<span class="kw">int</span> num = <span class="nu">42</span>;
+<span class="kw">object</span> boxed = num;  <span class="co">// stored on heap</span>
+
+<span class="co">// Unboxing — object → value type</span>
+<span class="kw">int</span> unboxed = (<span class="kw">int</span>) boxed;  <span class="co">// must match type</span></pre>
+        <div class="callout warn">
+          Boxing/unboxing is slow. Avoid in performance-critical loops. Use <strong>generics</strong> instead.
+        </div>
+        <h3 style="margin-top:0.75rem">Struct vs Class</h3>
+        <pre><span class="kw">struct</span> <span class="ty">Point</span> { <span class="kw">public int</span> X, Y; } <span class="co">// value type</span>
+<span class="kw">class</span>  <span class="ty">Shape</span> { <span class="kw">public int</span> X, Y; } <span class="co">// reference type</span></pre>
+        <p style="font-size:0.8rem; color:var(--muted); margin-top:0.4rem">Structs = small, short-lived data. Classes = objects with behavior.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:1.25rem">
+      <div class="card">
+        <h3>Common Integer / Numeric Types Quick Reference</h3>
+        <table class="mod-table">
+          <tr><th>Type</th><th>Size</th><th>Range</th><th>Default</th><th>Suffix</th></tr>
+          <tr><td>int</td><td>32-bit</td><td>-2.1B to 2.1B</td><td>0</td><td>none</td></tr>
+          <tr><td>long</td><td>64-bit</td><td>-9.2×10¹⁸ to 9.2×10¹⁸</td><td>0L</td><td>L</td></tr>
+          <tr><td>float</td><td>32-bit</td><td>±3.4×10³⁸ (7 digits)</td><td>0.0f</td><td>f</td></tr>
+          <tr><td>double</td><td>64-bit</td><td>±1.7×10³⁰⁸ (15-16 digits)</td><td>0.0d</td><td>d</td></tr>
+          <tr><td>decimal</td><td>128-bit</td><td>±7.9×10²⁸ (28-29 digits)</td><td>0.0m</td><td>m</td></tr>
+          <tr><td>bool</td><td>1-bit</td><td>true / false</td><td>false</td><td>—</td></tr>
+          <tr><td>char</td><td>16-bit</td><td>U+0000 to U+FFFF</td><td>'\u0000'</td><td>—</td></tr>
+          <tr><td>string</td><td>ref type</td><td>sequence of chars</td><td>null</td><td>—</td></tr>
+        </table>
+        <div class="callout warn" style="margin-top:0.75rem">
+          <strong>Use <code>decimal</code> for money</strong> — float/double have rounding errors: <code>0.1f</code> stored as <code>0.100000001490116</code>!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="overloading">
+    <div class="section-title">
+      <span class="num">10</span>
+      <h2>Method &amp; Constructor Overloading</h2>
+      <span class="tag">compile-time polymorphism</span>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Method Overloading</h3>
+        <p>Same method name, different parameter types/count. The compiler picks the right one.</p>
+        <pre><span class="kw">public class</span> <span class="ty">Calculator</span>
+{
+    <span class="co">// Different parameter types</span>
+    <span class="kw">public int</span>    <span class="me">Add</span>(<span class="kw">int</span> a, <span class="kw">int</span> b)       => a + b;
+    <span class="kw">public double</span> <span class="me">Add</span>(<span class="kw">double</span> a, <span class="kw">double</span> b) => a + b;
+
+    <span class="co">// Different number of parameters</span>
+    <span class="kw">public int</span>    <span class="me">Add</span>(<span class="kw">int</span> a, <span class="kw">int</span> b, <span class="kw">int</span> c) => a + b + c;
+}
+
+<span class="ty">Calculator</span> calc = <span class="kw">new</span> <span class="ty">Calculator</span>();
+calc.<span class="me">Add</span>(<span class="nu">1</span>, <span class="nu">2</span>);          <span class="co">// returns int 3</span>
+calc.<span class="me">Add</span>(<span class="nu">1.5</span>, <span class="nu">2.5</span>);     <span class="co">// returns double 4.0</span>
+calc.<span class="me">Add</span>(<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>);       <span class="co">// returns int 6</span></pre>
+      </div>
+      <div class="card">
+        <h3>Constructor Overloading</h3>
+        <p>Multiple ways to create an object. Use <code style="color:var(--keyword)">this()</code> to call another constructor.</p>
+        <pre><span class="kw">public class</span> <span class="ty">Rectangle</span>
+{
+    <span class="kw">public double</span> Width, Height;
+
+    <span class="co">// Square constructor reuses this one</span>
+    <span class="kw">public</span> <span class="ty">Rectangle</span>(<span class="kw">double</span> w, <span class="kw">double</span> h)
+    {
+        Width = w; Height = h;
+    }
+
+    <span class="co">// Calls the constructor above with this()</span>
+    <span class="kw">public</span> <span class="ty">Rectangle</span>(<span class="kw">double</span> side) : <span class="kw">this</span>(side, side) { }
+
+    <span class="co">// Default 1x1</span>
+    <span class="kw">public</span> <span class="ty">Rectangle</span>() : <span class="kw">this</span>(<span class="nu">1.0</span>) { }
+}
+
+<span class="kw">var</span> r1 = <span class="kw">new</span> <span class="ty">Rectangle</span>(<span class="nu">3</span>, <span class="nu">4</span>);
+<span class="kw">var</span> r2 = <span class="kw">new</span> <span class="ty">Rectangle</span>(<span class="nu">5</span>);   <span class="co">// 5×5 square</span>
+<span class="kw">var</span> r3 = <span class="kw">new</span> <span class="ty">Rectangle</span>();    <span class="co">// 1×1</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="design">
+    <div class="section-title">
+      <span class="num">11</span>
+      <h2>Design Principles</h2>
+      <span class="tag">good code habits</span>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3>✅ Strong Cohesion</h3>
+        <p>Each class/method does <strong>one thing well</strong>. If you can't name a class easily, it's doing too much.</p>
+        <pre><span class="co">// Good — focused class</span>
+<span class="kw">public class</span> <span class="ty">EmailSender</span>
+{
+    <span class="kw">public void</span> <span class="me">Send</span>(<span class="ty">Email</span> e) { ... }
+}
+
+<span class="co">// Bad — doing too many things</span>
+<span class="kw">public class</span> <span class="ty">Magic</span>
+{
+    <span class="kw">public void</span> <span class="me">PrintDoc</span>() { ... }
+    <span class="kw">public void</span> <span class="me">SendEmail</span>() { ... }
+    <span class="kw">public void</span> <span class="me">CalcDistance</span>() { ... }
+}</pre>
+      </div>
+      <div class="card">
+        <h3>🔗 Loose Coupling</h3>
+        <p>Classes should know as little as possible about each other. Communicate through <strong>interfaces, not internals</strong>.</p>
+        <pre><span class="co">// Good — depends on interface</span>
+<span class="kw">public void</span> <span class="me">Process</span>(<span class="ty">ILogger</span> logger)
+{
+    logger.<span class="me">Log</span>(<span class="st">"done"</span>);
+}
+
+<span class="co">// Bad — tightly coupled to static fields</span>
+<span class="kw">public static double</span> operand;
+<span class="kw">public static double</span> result;
+<span class="co">// Any change breaks everything using these</span></pre>
+        <div class="callout">
+          <strong>High cohesion + low coupling = maintainable, reusable code.</strong>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Enum &amp; Static Members</h3>
+        <pre><span class="co">// Enum — named integer constants</span>
+<span class="kw">enum</span> <span class="ty">Season</span> { Spring, Summer, Autumn, Winter }
+<span class="ty">Season</span> s = <span class="ty">Season</span>.Summer;
+
+<span class="co">// Static — belongs to class, not object</span>
+<span class="kw">public class</span> <span class="ty">MathHelper</span>
+{
+    <span class="kw">public static double</span> PI = <span class="nu">3.14159</span>;
+
+    <span class="kw">public static double</span> <span class="me">Square</span>(<span class="kw">double</span> x)
+        => x * x;
+}
+<span class="co">// Call without creating an object:</span>
+<span class="ty">MathHelper</span>.<span class="me">Square</span>(<span class="nu">5</span>);</pre>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:1.25rem">
+      <div class="card">
+        <h3>Delegates &amp; Events (Quick Overview)</h3>
+        <pre><span class="co">// Delegate — type-safe function pointer</span>
+<span class="kw">public delegate int</span> <span class="ty">MathOp</span>(<span class="kw">int</span> a, <span class="kw">int</span> b);
+
+<span class="kw">static int</span> <span class="me">Add</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) => a + b;
+<span class="kw">static int</span> <span class="me">Mul</span>(<span class="kw">int</span> a, <span class="kw">int</span> b) => a * b;
+
+<span class="ty">MathOp</span> op = <span class="me">Add</span>;
+<span class="ty">Console</span>.<span class="me">WriteLine</span>(op(<span class="nu">3</span>, <span class="nu">4</span>)); <span class="co">// 7</span>
+op = <span class="me">Mul</span>;
+<span class="ty">Console</span>.<span class="me">WriteLine</span>(op(<span class="nu">3</span>, <span class="nu">4</span>)); <span class="co">// 12</span>
+
+<span class="co">// Multicast — call multiple methods</span>
+op = <span class="me">Add</span>;
+op += <span class="me">Mul</span>;  <span class="co">// both are called in order</span></pre>
+      </div>
+      <div class="card">
+        <h3>The this &amp; base Keywords</h3>
+        <div class="concept">
+          <strong><code style="color:var(--keyword)">this</code></strong>
+          <span>Refers to the <strong>current object</strong>. Used to distinguish fields from parameters, or to call another constructor in the same class: <code>this(params)</code>.</span>
+        </div>
+        <div class="concept green" style="margin-top:0.6rem">
+          <strong><code style="color:var(--keyword)">base</code></strong>
+          <span>Refers to the <strong>parent class</strong>. Used to call parent constructor: <code>base(params)</code>, or parent method: <code>base.Method()</code>.</span>
+        </div>
+        <pre style="margin-top:0.75rem"><span class="kw">public class</span> <span class="ty">Dog</span> : <span class="ty">Animal</span>
+{
+    <span class="kw">private string</span> breed;
+
+    <span class="kw">public</span> <span class="ty">Dog</span>(<span class="ty">string</span> name, <span class="ty">string</span> breed)
+        : <span class="kw">base</span>(name)  <span class="co">// calls Animal(name)</span>
+    {
+        <span class="kw">this</span>.breed = breed; <span class="co">// this = current Dog</span>
+    }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">
+      <span class="num">⚡</span>
+      <h2>One-Page Quick Reference</h2>
+      <span class="tag">speed review</span>
+    </div>
+    <div class="grid-3">
+      <div class="card">
+        <h3>Class Skeleton</h3>
+        <pre><span class="kw">public class</span> <span class="ty">MyClass</span> : <span class="ty">BaseClass</span>
+{
+    <span class="kw">private</span> <span class="ty">int</span> field;          <span class="co">// field</span>
+    <span class="kw">public</span>  <span class="ty">int</span> Prop { <span class="kw">get</span>; <span class="kw">set</span>; } <span class="co">// prop</span>
+
+    <span class="kw">public</span> <span class="ty">MyClass</span>() { }          <span class="co">// ctor</span>
+
+    <span class="kw">public override void</span> <span class="me">Method</span>() <span class="co">// method</span>
+    {
+        <span class="kw">base</span>.<span class="me">Method</span>();
+    }
+}</pre>
+      </div>
+      <div class="card">
+        <h3>Interface Skeleton</h3>
+        <pre><span class="kw">public interface</span> <span class="ty">IMyInterface</span>
+{
+    <span class="ty">string</span> Prop { <span class="kw">get</span>; }
+    <span class="kw">void</span> <span class="me">DoSomething</span>();
+    <span class="kw">int</span> <span class="me">Calculate</span>(<span class="kw">int</span> x);
+}
+
+<span class="kw">public class</span> <span class="ty">Impl</span> : <span class="ty">IMyInterface</span>
+{
+    <span class="kw">public</span> <span class="ty">string</span> Prop => <span class="st">"value"</span>;
+    <span class="kw">public void</span> <span class="me">DoSomething</span>() { ... }
+    <span class="kw">public int</span>  <span class="me">Calculate</span>(<span class="kw">int</span> x) => x * x;
+}</pre>
+      </div>
+      <div class="card">
+        <h3>Abstract Class Skeleton</h3>
+        <pre><span class="kw">public abstract class</span> <span class="ty">BaseShape</span>
+{
+    <span class="co">// Concrete — subclasses inherit it</span>
+    <span class="kw">public void</span> <span class="me">Describe</span>()
+        => <span class="ty">Console</span>.<span class="me">WriteLine</span>(<span class="st">"A shape"</span>);
+
+    <span class="co">// Abstract — subclasses must implement</span>
+    <span class="kw">public abstract double</span> <span class="me">Area</span>();
+}
+
+<span class="kw">public class</span> <span class="ty">Triangle</span> : <span class="ty">BaseShape</span>
+{
+    <span class="kw">double</span> b, h;
+    <span class="kw">public</span> <span class="ty">Triangle</span>(<span class="kw">double</span> b, <span class="kw">double</span> h)
+    { <span class="kw">this</span>.b=b; <span class="kw">this</span>.h=h; }
+
+    <span class="kw">public override double</span> <span class="me">Area</span>() => b*h/<span class="nu">2</span>;
+}</pre>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:1.25rem; font-size:0.9rem; text-align:center;">
+      <strong>The big idea: </strong>
+      Encapsulation = <em>hide internals</em> &nbsp;·&nbsp;
+      Inheritance = <em>reuse code</em> &nbsp;·&nbsp;
+      Polymorphism = <em>one interface, many behaviors</em> &nbsp;·&nbsp;
+      Abstraction = <em>define what, not how</em>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

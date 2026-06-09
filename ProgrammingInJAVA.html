@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Java Programming — Cheat Sheet</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:       #0d0f14;
+  --surface:  #13161e;
+  --card:     #1a1e2a;
+  --border:   #252a38;
+  --accent:   #f7c94b;
+  --text:     #e2e8f0;
+  --muted:    #8892a4;
+  --code-bg:  #0a0c12;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── CROSS-NAV ── */
+.crossnav {
+  background: #080a0f;
+  border-bottom: 1px solid #1a1d2a;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 40px;
+  flex-shrink: 0;
+}
+.crossnav::-webkit-scrollbar { display: none; }
+.crossnav-label {
+  color: rgba(255,255,255,0.22);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0 12px 0 0;
+  border-right: 1px solid #1e2235;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.crossnav a {
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.crossnav a:hover {
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+}
+.crossnav a.active {
+  color: #fff;
+  background: rgba(79,142,247,0.14);
+  border-color: rgba(79,142,247,0.32);
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  background: linear-gradient(160deg, #0d0f14 0%, #111520 60%, #0d0f14 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 44px 32px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, color-mix(in srgb, #f7c94b 8%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-header-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.page-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  opacity: 0.85;
+}
+.page-header h1 {
+  font-size: clamp(24px, 3.5vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.page-header h1 span { color: var(--accent); }
+.page-header p {
+  color: var(--muted);
+  font-size: 13.5px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+/* ── PAGE NAV ── */
+.page-nav {
+  background: rgba(13,15,20,0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 40px;
+  z-index: 100;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.page-nav::-webkit-scrollbar { display: none; }
+.page-nav-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0;
+  white-space: nowrap;
+}
+.page-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.page-nav a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+  border-color: var(--border);
+}
+
+/* ── CONTENT WRAPPER ── */
+.page-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+}
+
+/* ── INHERIT existing content styles ── */
+h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c8d0e0;
+}
+pre, code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--code-bg);
+  border: 1px solid #1e2235;
+  border-radius: 6px;
+  color: #c8d0e0;
+}
+pre { padding: 14px; overflow-x: auto; line-height: 1.55; }
+code { padding: 1px 6px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 700px) {
+  .page-header { padding: 32px 16px 28px; }
+  .page-nav { padding: 0 12px; }
+  .page-content { padding: 20px 16px 60px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="crossnav">
+  <a href="index.html" style="color:rgba(255,255,255,0.25);font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid transparent;text-decoration:none;transition:all .15s;flex-shrink:0;" onmouseover="this.style.color='rgba(255,255,255,0.65)';this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'" onmouseout="this.style.color='rgba(255,255,255,0.25)';this.style.background='';this.style.borderColor='transparent'">⌂</a>
+  <span class="crossnav-label">Notes</span>
+    <a href="BigDataFundamentals.html">🗄️ Big Data</a>
+    <a href="ProgrammingInJAVA.html" class="active">☕ Java</a>
+    <a href="ObjectOrientedProgramming_C_.html">🔷 OOP C#</a>
+    <a href="AdvancedDatabases.html">🗃️ Databases</a>
+    <a href="SoftwarePackages.html">📦 Packages</a>
+</div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-label">ULBS · Java Programming</div>
+    <h1>Java <span>Programming</span> Quick Reference</h1>
+    <p>All core concepts from Introduction → Spring Boot, condensed for maximum learning speed.</p>
+  </div>
+</div>
+
+<div class="page-nav">
+  <div class="page-nav-inner">
+    <a href="#basics">Basics</a>
+    <a href="#datatypes">Data Types</a>
+    <a href="#control">Control Flow</a>
+    <a href="#loops">Loops</a>
+    <a href="#methods">Methods</a>
+    <a href="#arrays">Arrays</a>
+    <a href="#oop">OOP</a>
+    <a href="#inheritance">Inheritance</a>
+    <a href="#interfaces">Interfaces</a>
+    <a href="#generics">Generics</a>
+    <a href="#exceptions">Exceptions</a>
+    <a href="#packages">Packages</a>
+    <a href="#threads">Threads</a>
+    <a href="#javafx">JavaFX</a>
+    <a href="#spring">Spring Boot</a>
+  </div>
+</div>
+
+<div class="page-content">
+
+<!-- page-specific styles -->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* HERO */
+  /* MAIN */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px;
+    display: grid;
+    gap: 32px;
+  }
+  /* SECTION */
+  section {
+    scroll-margin-top: 52px;
+  }
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  /* GRID */
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-auto { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-auto { grid-template-columns: 1fr; }
+    main { padding: 20px; }
+    nav { padding: 0 20px; }
+    header { padding: 32px 20px; }
+  }
+  /* CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .card.blue::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+  .card.yellow::before { background: linear-gradient(90deg, var(--accent), transparent); }
+  .card.green::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+  .card.red::before { background: linear-gradient(90deg, var(--accent4), transparent); }
+  .card.purple::before { background: linear-gradient(90deg, var(--accent5), transparent); }
+  .card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h3 .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-blue { background: var(--accent2); }
+  .dot-yellow { background: var(--accent); }
+  .dot-green { background: var(--accent3); }
+  .dot-red { background: var(--accent4); }
+  .dot-purple { background: var(--accent5); }
+  /* CODE */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid #1e2235;
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: #cdd6f4;
+    margin: 8px 0;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--code-bg);
+    border: 1px solid #1e2235;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent3);
+  }
+  .kw  { color: #cba6f7; }   /* keyword  */
+  .ty  { color: #89dceb; }   /* type     */
+  .st  { color: #a6e3a1; }   /* string   */
+  .cm  { color: #585b70; font-style: italic; }  /* comment */
+  .nm  { color: #f9e2af; }   /* number   */
+  .fn  { color: #89b4fa; }   /* function */
+  .op  { color: #f38ba8; }   /* operator */
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  th {
+    background: #1e2235;
+    color: var(--muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 8px 12px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  td code { font-size: 11px; }
+  .hl { color: var(--accent); font-weight: 700; }
+  .hl2 { color: var(--accent2); }
+  .hl3 { color: var(--accent3); }
+  .hl4 { color: var(--accent4); }
+  .hl5 { color: var(--accent5); }
+  /* LIST */
+  ul.nice { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  ul.nice li { display: flex; align-items: flex-start; gap: 8px; color: var(--text); font-size: 13px; }
+  ul.nice li::before { content: '▸'; color: var(--accent2); flex-shrink: 0; margin-top: 1px; }
+  ul.nice.green li::before { color: var(--accent3); }
+  ul.nice.yellow li::before { color: var(--accent); }
+  ul.nice.red li::before { color: var(--accent4); }
+  ul.nice.purple li::before { color: var(--accent5); }
+  p.note {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 8px;
+    font-style: italic;
+  }
+  .label {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 6px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .label-blue { background: rgba(94,138,255,0.15); color: var(--accent2); }
+  .label-green { background: rgba(77,255,163,0.1); color: var(--accent3); }
+  .label-yellow { background: rgba(247,201,75,0.12); color: var(--accent); }
+  .label-red { background: rgba(255,107,107,0.12); color: var(--accent4); }
+  .label-purple { background: rgba(199,125,255,0.12); color: var(--accent5); }
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 4px 0 12px;
+  }
+  .tip {
+    background: rgba(94,138,255,0.07);
+    border: 1px solid rgba(94,138,255,0.2);
+    border-left: 3px solid var(--accent2);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: #a8b4d8;
+    margin-top: 10px;
+  }
+  .warn {
+    background: rgba(255,107,107,0.06);
+    border: 1px solid rgba(255,107,107,0.2);
+    border-left: 3px solid var(--accent4);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: #d8a8a8;
+    margin-top: 10px;
+  }
+  footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 24px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+</style>
+
+<!-- ===== BASICS ===== -->
+<section id="basics">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(247,201,75,0.12)">☕</div>
+    <h2>Java Basics</h2>
+    <span class="tag">§01</span>
+  </div>
+  <div class="grid grid-3">
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>How Java Works</h3>
+      <ul class="nice yellow">
+        <li>You write <strong>.java</strong> source code</li>
+        <li><code>javac</code> compiles it to <strong>.class</strong> (bytecode)</li>
+        <li>The <strong>JVM</strong> runs bytecode on any OS</li>
+        <li>JRE = JVM + libraries &nbsp;|&nbsp; JDK = JRE + compiler</li>
+      </ul>
+      <p class="note">Write once, run anywhere → platform independence.</p>
+    </div>
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Hello World</h3>
+      <pre><span class="kw">public class</span> <span class="ty">HelloWorld</span> {
+  <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] args) {
+    <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Hello world"</span>);
+  }
+}</pre>
+      <ul class="nice yellow">
+        <li>Every app needs a class with <code>main()</code></li>
+        <li>Execution starts at <code>main</code></li>
+      </ul>
+    </div>
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Comments</h3>
+      <pre><span class="cm">// Single-line comment</span>
+
+<span class="cm">/* Multi-line
+   comment */</span>
+
+<span class="cm">/** Javadoc comment
+ *  @param name description
+ */</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DATA TYPES ===== -->
+<section id="datatypes">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(94,138,255,0.12)">📦</div>
+    <h2>Data Types &amp; Variables</h2>
+    <span class="tag">§02</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Primitive Types</h3>
+      <table>
+        <tr><th>Type</th><th>Size / Range</th><th>Example</th></tr>
+        <tr><td class="hl2">byte</td><td>−128 to 127</td><td><code>byte b = 10;</code></td></tr>
+        <tr><td class="hl2">short</td><td>−32,768 to 32,767</td><td><code>short s = 1000;</code></td></tr>
+        <tr><td class="hl2">int</td><td>−2B to 2B</td><td><code>int i = 42;</code></td></tr>
+        <tr><td class="hl2">long</td><td>±9.2 × 10¹⁸</td><td><code>long l = 9L;</code></td></tr>
+        <tr><td class="hl2">float</td><td>6–7 decimal digits</td><td><code>float f = 3.14f;</code></td></tr>
+        <tr><td class="hl2">double</td><td>15 decimal digits</td><td><code>double d = 3.14;</code></td></tr>
+        <tr><td class="hl2">char</td><td>Unicode character</td><td><code>char c = 'A';</code></td></tr>
+        <tr><td class="hl2">boolean</td><td>true / false</td><td><code>boolean ok = true;</code></td></tr>
+      </table>
+    </div>
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Variables &amp; Constants</h3>
+      <pre><span class="cm">// Declaration + assignment</span>
+<span class="ty">int</span> age = <span class="nm">25</span>;
+<span class="ty">double</span> price = <span class="nm">9.99</span>;
+<span class="ty">String</span> name = <span class="st">"Alice"</span>;
+
+<span class="cm">// Constants (cannot change)</span>
+<span class="kw">final double</span> PI = <span class="nm">3.14159</span>;
+<span class="kw">final int</span> MAX = <span class="nm">100</span>;</pre>
+      <div class="tip">Convention: variables <code>camelCase</code>, classes <code>PascalCase</code>, constants <code>UPPER_SNAKE</code>.</div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Arithmetic Operators</h3>
+      <table>
+        <tr><th>Op</th><th>Meaning</th><th>Example → Result</th></tr>
+        <tr><td class="hl">+</td><td>Add</td><td><code>5 + 3 → 8</code></td></tr>
+        <tr><td class="hl">-</td><td>Subtract</td><td><code>5 - 3 → 2</code></td></tr>
+        <tr><td class="hl">*</td><td>Multiply</td><td><code>5 * 3 → 15</code></td></tr>
+        <tr><td class="hl">/</td><td>Divide (int or float)</td><td><code>7 / 2 → 3</code> (int!)</td></tr>
+        <tr><td class="hl">%</td><td>Remainder</td><td><code>7 % 2 → 1</code></td></tr>
+        <tr><td class="hl">++</td><td>Increment</td><td><code>x++ or ++x</code></td></tr>
+        <tr><td class="hl">--</td><td>Decrement</td><td><code>x-- or --x</code></td></tr>
+      </table>
+      <div class="warn">⚠ Integer division: <code>7/2 = 3</code> (not 3.5). Use <code>7.0/2</code> for float result.</div>
+    </div>
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Scanner – User Input</h3>
+      <pre><span class="kw">import</span> java.util.Scanner;
+
+<span class="ty">Scanner</span> sc = <span class="kw">new</span> <span class="ty">Scanner</span>(<span class="ty">System</span>.in);
+
+<span class="ty">int</span>    n = sc.<span class="fn">nextInt</span>();
+<span class="ty">double</span> d = sc.<span class="fn">nextDouble</span>();
+<span class="ty">String</span> s = sc.<span class="fn">next</span>();       <span class="cm">// one word</span>
+<span class="ty">String</span> l = sc.<span class="fn">nextLine</span>();   <span class="cm">// full line</span></pre>
+      <div class="tip">Import Scanner at the top. Use <code>nextLine()</code> for strings with spaces.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTROL FLOW ===== -->
+<section id="control">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(77,255,163,0.1)">🔀</div>
+    <h2>Control Flow</h2>
+    <span class="tag">§03</span>
+  </div>
+  <div class="grid grid-3">
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>if / else if / else</h3>
+      <pre><span class="kw">if</span> (score &gt;= <span class="nm">90</span>) {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"A"</span>);
+} <span class="kw">else if</span> (score &gt;= <span class="nm">80</span>) {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"B"</span>);
+} <span class="kw">else</span> {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"F"</span>);
+}</pre>
+    </div>
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>Comparison &amp; Logical Ops</h3>
+      <table>
+        <tr><th>Op</th><th>Meaning</th></tr>
+        <tr><td><code>==</code></td><td>Equal to</td></tr>
+        <tr><td><code>!=</code></td><td>Not equal</td></tr>
+        <tr><td><code>&lt; &gt; &lt;= &gt;=</code></td><td>Comparisons</td></tr>
+        <tr><td><code>&amp;&amp;</code></td><td>AND</td></tr>
+        <tr><td><code>||</code></td><td>OR</td></tr>
+        <tr><td><code>!</code></td><td>NOT</td></tr>
+      </table>
+    </div>
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>switch</h3>
+      <pre><span class="kw">switch</span> (day) {
+  <span class="kw">case</span> <span class="st">"Mon"</span>:
+    <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Monday"</span>);
+    <span class="kw">break</span>;
+  <span class="kw">case</span> <span class="st">"Tue"</span>:
+  <span class="kw">case</span> <span class="st">"Wed"</span>:  <span class="cm">// fall-through</span>
+    <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Midweek"</span>);
+    <span class="kw">break</span>;
+  <span class="kw">default</span>:
+    <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Other"</span>);
+}</pre>
+      <div class="tip">Use <code>break</code> to prevent fall-through. Works with String since Java 7.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== LOOPS ===== -->
+<section id="loops">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(199,125,255,0.12)">🔄</div>
+    <h2>Loops</h2>
+    <span class="tag">§04</span>
+  </div>
+  <div class="grid grid-3">
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>for loop</h3>
+      <div class="label label-purple">Known iterations</div>
+      <pre><span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; <span class="nm">5</span>; i++) {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(i);
+}
+<span class="cm">// prints 0, 1, 2, 3, 4</span></pre>
+    </div>
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>while loop</h3>
+      <div class="label label-purple">Unknown iterations</div>
+      <pre><span class="ty">int</span> result = -<span class="nm">1</span>;
+<span class="kw">while</span> (result &lt; <span class="nm">0</span> || result &gt; <span class="nm">100</span>) {
+  <span class="ty">System</span>.out.<span class="fn">print</span>(<span class="st">"Enter 0-100: "</span>);
+  result = sc.<span class="fn">nextInt</span>();
+}
+<span class="cm">// keeps asking until valid</span></pre>
+    </div>
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>do…while loop</h3>
+      <div class="label label-purple">Runs at least once</div>
+      <pre><span class="ty">char</span> again;
+<span class="kw">do</span> {
+  <span class="cm">// program logic</span>
+  <span class="ty">System</span>.out.<span class="fn">print</span>(<span class="st">"Again? (y/n): "</span>);
+  again = sc.<span class="fn">next</span>().<span class="fn">charAt</span>(<span class="nm">0</span>);
+} <span class="kw">while</span> (again == <span class="st">'y'</span>);</pre>
+    </div>
+  </div>
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>break &amp; continue</h3>
+      <pre><span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; <span class="nm">10</span>; i++) {
+  <span class="kw">if</span> (i == <span class="nm">5</span>) <span class="kw">break</span>;    <span class="cm">// exit loop</span>
+  <span class="kw">if</span> (i % <span class="nm">2</span> != <span class="nm">0</span>) <span class="kw">continue</span>; <span class="cm">// skip odd</span>
+  <span class="ty">System</span>.out.<span class="fn">println</span>(i); <span class="cm">// 0, 2, 4</span>
+}</pre>
+    </div>
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Enhanced for-each</h3>
+      <pre><span class="ty">int</span>[] nums = {<span class="nm">10</span>, <span class="nm">20</span>, <span class="nm">30</span>};
+<span class="kw">for</span> (<span class="ty">int</span> n : nums) {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(n);
+}</pre>
+      <div class="tip">Use when you need all elements without modifying them. Can't access index.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== METHODS ===== -->
+<section id="methods">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(247,201,75,0.12)">⚙️</div>
+    <h2>Methods</h2>
+    <span class="tag">§05</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Anatomy of a Method</h3>
+      <pre><span class="cm">// modifier returnType name(params)</span>
+<span class="kw">static double</span> <span class="fn">addTax</span>(<span class="ty">double</span> price, <span class="ty">double</span> tax) {
+  <span class="kw">return</span> price * (<span class="nm">1</span> + tax / <span class="nm">100</span>);
+}
+
+<span class="cm">// void = returns nothing</span>
+<span class="kw">static void</span> <span class="fn">greet</span>(<span class="ty">String</span> name) {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Hi, "</span> + name);
+}</pre>
+    </div>
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Calling &amp; Overloading</h3>
+      <pre><span class="ty">double</span> total = <span class="fn">addTax</span>(<span class="nm">100.0</span>, <span class="nm">19.0</span>); <span class="cm">// call</span>
+<span class="fn">greet</span>(<span class="st">"Bob"</span>);
+
+<span class="cm">// Overloading: same name, diff params</span>
+<span class="kw">static int</span>    <span class="fn">add</span>(<span class="ty">int</span> a, <span class="ty">int</span> b)       { <span class="kw">return</span> a+b; }
+<span class="kw">static double</span> <span class="fn">add</span>(<span class="ty">double</span> a, <span class="ty">double</span> b) { <span class="kw">return</span> a+b; }
+<span class="kw">static int</span>    <span class="fn">add</span>(<span class="ty">int</span> a, <span class="ty">int</span> b, <span class="ty">int</span> c){ <span class="kw">return</span> a+b+c; }</pre>
+    </div>
+  </div>
+  <div class="grid grid-3" style="margin-top:16px">
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Pass-by-Value</h3>
+      <ul class="nice yellow">
+        <li>Primitives: method gets a <strong>copy</strong> — original unchanged</li>
+        <li>Arrays/Objects: method gets a <strong>reference</strong> — original can change</li>
+      </ul>
+      <pre><span class="kw">void</span> <span class="fn">demo</span>(<span class="ty">int</span> x) { x = <span class="nm">99</span>; }
+<span class="ty">int</span> a = <span class="nm">5</span>;
+<span class="fn">demo</span>(a);
+<span class="cm">// a is still 5!</span></pre>
+    </div>
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Variable Scope</h3>
+      <table>
+        <tr><th>Scope</th><th>Where declared</th></tr>
+        <tr><td class="hl">Local</td><td>Inside a method; gone after method ends</td></tr>
+        <tr><td class="hl">Parameter</td><td>Method signature; exists in method</td></tr>
+        <tr><td class="hl">Instance</td><td>In class, outside methods</td></tr>
+        <tr><td class="hl">Static</td><td><code>static</code> keyword; shared by all objects</td></tr>
+      </table>
+    </div>
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Varargs</h3>
+      <pre><span class="cm">// Accept variable number of args</span>
+<span class="kw">static void</span> <span class="fn">print</span>(<span class="ty">double</span>... vals) {
+  <span class="kw">for</span> (<span class="ty">double</span> v : vals)
+    <span class="ty">System</span>.out.<span class="fn">println</span>(v);
+}
+
+<span class="fn">print</span>(<span class="nm">1.0</span>, <span class="nm">2.5</span>, <span class="nm">3.7</span>);   <span class="cm">// ok</span>
+<span class="fn">print</span>(myArray);         <span class="cm">// also ok</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ARRAYS ===== -->
+<section id="arrays">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(255,107,107,0.1)">📊</div>
+    <h2>Arrays</h2>
+    <span class="tag">§06</span>
+  </div>
+  <div class="grid grid-3">
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>1D Arrays</h3>
+      <pre><span class="cm">// Declare → allocate → use</span>
+<span class="ty">int</span>[] nums = <span class="kw">new int</span>[<span class="nm">5</span>];
+nums[<span class="nm">0</span>] = <span class="nm">10</span>;
+
+<span class="cm">// Shorthand init</span>
+<span class="ty">double</span>[] temps = {<span class="nm">9.0</span>, <span class="nm">11.5</span>, <span class="nm">8.0</span>};
+
+<span class="cm">// Length property</span>
+<span class="ty">System</span>.out.<span class="fn">println</span>(nums.length); <span class="cm">// 5</span>
+
+<span class="cm">// Loop through</span>
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; nums.length; i++)
+  nums[i] = i * <span class="nm">2</span>;</pre>
+    </div>
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>2D Arrays</h3>
+      <pre><span class="ty">double</span>[][] grid = <span class="kw">new double</span>[<span class="nm">4</span>][<span class="nm">7</span>];
+grid[<span class="nm">0</span>][<span class="nm">3</span>] = <span class="nm">99.5</span>;
+
+<span class="cm">// Init inline</span>
+<span class="ty">int</span>[][] m = {{<span class="nm">1</span>,<span class="nm">2</span>},{<span class="nm">3</span>,<span class="nm">4</span>}};
+
+<span class="cm">// Nested loops</span>
+<span class="kw">for</span>(<span class="ty">int</span> r = <span class="nm">0</span>; r &lt; m.length; r++)
+  <span class="kw">for</span>(<span class="ty">int</span> c = <span class="nm">0</span>; c &lt; m[r].length; c++)
+    <span class="ty">System</span>.out.<span class="fn">print</span>(m[r][c]);</pre>
+    </div>
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>ArrayList</h3>
+      <pre><span class="kw">import</span> java.util.ArrayList;
+
+<span class="ty">ArrayList</span>&lt;<span class="ty">String</span>&gt; list
+  = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+
+list.<span class="fn">add</span>(<span class="st">"Apple"</span>);
+list.<span class="fn">add</span>(<span class="st">"Banana"</span>);
+<span class="ty">String</span> s = list.<span class="fn">get</span>(<span class="nm">0</span>);   <span class="cm">// "Apple"</span>
+list.<span class="fn">remove</span>(<span class="nm">0</span>);
+<span class="ty">int</span> sz = list.<span class="fn">size</span>();</pre>
+      <div class="tip">ArrayList resizes automatically. Use it over arrays when size is unknown.</div>
+    </div>
+  </div>
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>Strings</h3>
+      <table>
+        <tr><th>Method</th><th>What it does</th></tr>
+        <tr><td><code>.length()</code></td><td>Number of characters</td></tr>
+        <tr><td><code>.charAt(i)</code></td><td>Char at index i</td></tr>
+        <tr><td><code>.substring(m,n)</code></td><td>Chars from m to n-1</td></tr>
+        <tr><td><code>.toUpperCase()</code></td><td>All caps</td></tr>
+        <tr><td><code>.toLowerCase()</code></td><td>All lower</td></tr>
+        <tr><td><code>.equals(s)</code></td><td>Compare content (not ==!)</td></tr>
+        <tr><td><code>.compareTo(s)</code></td><td>&lt;0 / 0 / &gt;0 (alphabetical)</td></tr>
+        <tr><td><code>.trim()</code></td><td>Remove leading/trailing spaces</td></tr>
+        <tr><td><code>.contains(s)</code></td><td>Check if substring exists</td></tr>
+      </table>
+      <div class="warn">⚠ Never compare strings with <code>==</code>. Always use <code>.equals()</code>.</div>
+    </div>
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>Common Array Algorithms</h3>
+      <pre><span class="cm">// Max value</span>
+<span class="ty">int</span> max = arr[<span class="nm">0</span>];
+<span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">1</span>; i &lt; arr.length; i++)
+  <span class="kw">if</span> (arr[i] &gt; max) max = arr[i];
+
+<span class="cm">// Sum</span>
+<span class="ty">int</span> sum = <span class="nm">0</span>;
+<span class="kw">for</span> (<span class="ty">int</span> v : arr) sum += v;
+
+<span class="cm">// Search (returns index or -1)</span>
+<span class="ty">int</span> <span class="fn">find</span>(<span class="ty">int</span>[] arr, <span class="ty">int</span> target) {
+  <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; arr.length; i++)
+    <span class="kw">if</span> (arr[i] == target) <span class="kw">return</span> i;
+  <span class="kw">return</span> -<span class="nm">1</span>;
+}</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===== OOP ===== -->
+<section id="oop">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(94,138,255,0.12)">🧱</div>
+    <h2>OOP – Classes &amp; Objects</h2>
+    <span class="tag">§07</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Class Template</h3>
+      <pre><span class="kw">public class</span> <span class="ty">BankAccount</span> {
+  <span class="cm">// Fields (private = encapsulation)</span>
+  <span class="kw">private</span> <span class="ty">String</span> name;
+  <span class="kw">private double</span> balance;
+
+  <span class="cm">// Constructor</span>
+  <span class="kw">public</span> <span class="ty">BankAccount</span>(<span class="ty">String</span> name) {
+    <span class="kw">this</span>.name = name;
+    <span class="kw">this</span>.balance = <span class="nm">0</span>;
+  }
+
+  <span class="cm">// Getter</span>
+  <span class="kw">public double</span> <span class="fn">getBalance</span>() { <span class="kw">return</span> balance; }
+
+  <span class="cm">// Setter / behavior</span>
+  <span class="kw">public void</span> <span class="fn">deposit</span>(<span class="ty">double</span> amt) { balance += amt; }
+
+  <span class="kw">public boolean</span> <span class="fn">withdraw</span>(<span class="ty">double</span> amt) {
+    <span class="kw">if</span> (amt &gt; balance) <span class="kw">return false</span>;
+    balance -= amt;
+    <span class="kw">return true</span>;
+  }
+}</pre>
+    </div>
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Using Objects</h3>
+      <pre><span class="cm">// Instantiation</span>
+<span class="ty">BankAccount</span> acc = <span class="kw">new</span> <span class="ty">BankAccount</span>(<span class="st">"Alice"</span>);
+
+<span class="cm">// Call methods</span>
+acc.<span class="fn">deposit</span>(<span class="nm">500</span>);
+<span class="kw">boolean</span> ok = acc.<span class="fn">withdraw</span>(<span class="nm">200</span>);
+<span class="ty">System</span>.out.<span class="fn">println</span>(acc.<span class="fn">getBalance</span>()); <span class="cm">// 300</span>
+
+<span class="cm">// Array of objects</span>
+<span class="ty">BankAccount</span>[] accounts = <span class="kw">new</span> <span class="ty">BankAccount</span>[<span class="nm">3</span>];
+accounts[<span class="nm">0</span>] = <span class="kw">new</span> <span class="ty">BankAccount</span>(<span class="st">"Bob"</span>);
+
+<span class="cm">// toString override</span>
+<span class="op">@Override</span>
+<span class="kw">public</span> <span class="ty">String</span> <span class="fn">toString</span>() {
+  <span class="kw">return</span> name + <span class="st">": $"</span> + balance;
+}</pre>
+      <div class="tip"><strong>Key OOP Principles</strong><br>
+        Encapsulation: private fields + public methods<br>
+        Abstraction: hide complexity<br>
+        Inheritance: extend classes<br>
+        Polymorphism: same method, different behavior</div>
+    </div>
+  </div>
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>static Keyword</h3>
+      <pre><span class="kw">public class</span> <span class="ty">BankAccount</span> {
+  <span class="cm">// Shared by ALL instances</span>
+  <span class="kw">private static double</span> interestRate = <span class="nm">3.5</span>;
+
+  <span class="cm">// Class method — no object needed</span>
+  <span class="kw">public static void</span> <span class="fn">setInterestRate</span>(<span class="ty">double</span> r) {
+    interestRate = r;
+  }
+}
+
+<span class="cm">// Call on class, not object:</span>
+<span class="ty">BankAccount</span>.<span class="fn">setInterestRate</span>(<span class="nm">4.0</span>);</pre>
+    </div>
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Wrapper Classes &amp; Autoboxing</h3>
+      <pre><span class="cm">// ArrayList needs objects, not primitives</span>
+<span class="ty">ArrayList</span>&lt;<span class="ty">Integer</span>&gt; nums = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+
+<span class="cm">// Autoboxing: int → Integer (auto)</span>
+nums.<span class="fn">add</span>(<span class="nm">42</span>);
+
+<span class="cm">// Unboxing: Integer → int (auto)</span>
+<span class="ty">int</span> x = nums.<span class="fn">get</span>(<span class="nm">0</span>);</pre>
+      <table style="margin-top:10px">
+        <tr><th>Primitive</th><th>Wrapper</th></tr>
+        <tr><td>int</td><td>Integer</td></tr>
+        <tr><td>double</td><td>Double</td></tr>
+        <tr><td>char</td><td>Character</td></tr>
+        <tr><td>boolean</td><td>Boolean</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INHERITANCE ===== -->
+<section id="inheritance">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(77,255,163,0.1)">🧬</div>
+    <h2>Inheritance &amp; Polymorphism</h2>
+    <span class="tag">§08</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>Inheritance with extends</h3>
+      <pre><span class="kw">public class</span> <span class="ty">Employee</span> {
+  <span class="kw">protected</span> <span class="ty">String</span> name;
+  <span class="kw">public</span> <span class="ty">Employee</span>(<span class="ty">String</span> name) { <span class="kw">this</span>.name = name; }
+  <span class="kw">public</span> <span class="ty">String</span> <span class="fn">getName</span>() { <span class="kw">return</span> name; }
+}
+
+<span class="kw">public class</span> <span class="ty">PartTimeEmployee</span> <span class="kw">extends</span> <span class="ty">Employee</span> {
+  <span class="kw">private double</span> hourlyPay;
+
+  <span class="kw">public</span> <span class="ty">PartTimeEmployee</span>(<span class="ty">String</span> name, <span class="ty">double</span> pay) {
+    <span class="kw">super</span>(name); <span class="cm">// call superclass constructor (MUST be first)</span>
+    <span class="kw">this</span>.hourlyPay = pay;
+  }
+
+  <span class="kw">public double</span> <span class="fn">weeklyPay</span>(<span class="ty">int</span> hours) {
+    <span class="kw">return</span> hours * hourlyPay;
+  }
+}</pre>
+    </div>
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>Method Overriding</h3>
+      <pre><span class="cm">// Superclass</span>
+<span class="kw">public boolean</span> <span class="fn">withdraw</span>(<span class="ty">double</span> amt) {
+  <span class="kw">if</span> (amt &gt; balance) <span class="kw">return false</span>;
+  balance -= amt;
+  <span class="kw">return true</span>;
+}
+
+<span class="cm">// Subclass GoldAccount overrides it</span>
+<span class="op">@Override</span>
+<span class="kw">public boolean</span> <span class="fn">withdraw</span>(<span class="ty">double</span> amt) {
+  <span class="kw">if</span> (amt &gt; balance + overdraftLimit) <span class="kw">return false</span>;
+  balance -= amt;
+  <span class="kw">return true</span>;
+}</pre>
+      <div class="tip"><code>@Override</code> is optional but recommended — the compiler will catch typos.</div>
+    </div>
+  </div>
+  <div class="grid grid-3" style="margin-top:16px">
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>Abstract Classes</h3>
+      <pre><span class="kw">abstract class</span> <span class="ty">Employee</span> {
+  <span class="cm">// Can't instantiate directly</span>
+
+  <span class="cm">// Abstract method = no body</span>
+  <span class="kw">public abstract</span> <span class="ty">String</span> <span class="fn">getStatus</span>();
+
+  <span class="cm">// Can have normal methods too</span>
+  <span class="kw">public</span> <span class="ty">String</span> <span class="fn">getName</span>() { <span class="kw">return</span> name; }
+}
+
+<span class="cm">// Subclasses MUST implement getStatus</span></pre>
+    </div>
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>final Modifier</h3>
+      <table>
+        <tr><th>Used on</th><th>Effect</th></tr>
+        <tr><td><span class="hl3">variable</span></td><td>Constant — cannot change</td></tr>
+        <tr><td><span class="hl3">method</span></td><td>Cannot be overridden</td></tr>
+        <tr><td><span class="hl3">class</span></td><td>Cannot be extended</td></tr>
+      </table>
+      <pre><span class="kw">final double</span> PI = <span class="nm">3.14</span>;
+<span class="kw">final class</span> <span class="ty">Immutable</span> { }
+<span class="kw">public final void</span> <span class="fn">locked</span>() { }</pre>
+    </div>
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>Object Class</h3>
+      <ul class="nice green">
+        <li>Every class implicitly extends <code>Object</code></li>
+        <li>Override <code>toString()</code> to print objects naturally</li>
+        <li><code>equals()</code>, <code>hashCode()</code> also from Object</li>
+      </ul>
+      <pre><span class="op">@Override</span>
+<span class="kw">public</span> <span class="ty">String</span> <span class="fn">toString</span>() {
+  <span class="kw">return</span> <span class="st">"Name: "</span> + name
+       + <span class="st">"\nBalance: "</span> + balance;
+}
+<span class="cm">// Now: System.out.println(acc); works!</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===== INTERFACES ===== -->
+<section id="interfaces">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(199,125,255,0.12)">🔌</div>
+    <h2>Interfaces &amp; Lambda Expressions</h2>
+    <span class="tag">§09</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Interface</h3>
+      <pre><span class="cm">// All methods are public abstract by default</span>
+<span class="kw">public interface</span> <span class="ty">Checkable</span> {
+  <span class="kw">boolean</span> <span class="fn">check</span>();
+}
+
+<span class="cm">// A class can implement many interfaces</span>
+<span class="kw">public class</span> <span class="ty">MyClass</span> <span class="kw">implements</span> <span class="ty">Checkable</span> {
+  <span class="op">@Override</span>
+  <span class="kw">public boolean</span> <span class="fn">check</span>() {
+    <span class="kw">return</span> value &gt; <span class="nm">0</span>;
+  }
+}</pre>
+      <div class="tip">Interfaces solve Java's "no multiple inheritance" limitation. A class can <code>implements</code> many.</div>
+    </div>
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Lambda Expressions</h3>
+      <div class="label label-purple">Functional interface = 1 abstract method</div>
+      <pre><span class="cm">// Anonymous class (old way)</span>
+<span class="ty">Checkable</span> c = <span class="kw">new</span> <span class="ty">Checkable</span>() {
+  <span class="kw">public boolean</span> <span class="fn">check</span>() { <span class="kw">return</span> <span class="kw">true</span>; }
+};
+
+<span class="cm">// Lambda (new way) — no params</span>
+<span class="ty">Checkable</span> c = () -&gt; <span class="kw">true</span>;
+
+<span class="cm">// With param and multiple lines</span>
+<span class="ty">MyFn</span> fn = (x, y) -&gt; {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Sum"</span>);
+  <span class="kw">return</span> x + y;
+};
+
+<span class="cm">// Single return → shorthand</span>
+<span class="ty">MyFn</span> fn2 = (x, y) -&gt; x + y;</pre>
+    </div>
+  </div>
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Built-in Functional Interfaces</h3>
+      <table>
+        <tr><th>Interface</th><th>Method</th><th>In → Out</th></tr>
+        <tr><td class="hl5">Supplier&lt;T&gt;</td><td>get()</td><td>none → T</td></tr>
+        <tr><td class="hl5">Consumer&lt;T&gt;</td><td>accept(T)</td><td>T → void</td></tr>
+        <tr><td class="hl5">Function&lt;T,R&gt;</td><td>apply(T)</td><td>T → R</td></tr>
+        <tr><td class="hl5">Predicate&lt;T&gt;</td><td>test(T)</td><td>T → boolean</td></tr>
+        <tr><td class="hl5">UnaryOperator&lt;T&gt;</td><td>apply(T)</td><td>T → T</td></tr>
+        <tr><td class="hl5">BinaryOperator&lt;T&gt;</td><td>apply(T,T)</td><td>T,T → T</td></tr>
+      </table>
+    </div>
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Method References</h3>
+      <pre><span class="cm">// Lambda that just calls a method:</span>
+str -&gt; <span class="ty">System</span>.out.<span class="fn">println</span>(str)
+<span class="cm">// Shorthand with ::</span>
+<span class="ty">System</span>.out::println
+
+<span class="cm">// Static method reference</span>
+x -&gt; <span class="ty">Math</span>.<span class="fn">sqrt</span>(x)
+<span class="ty">Math</span>::sqrt
+
+<span class="cm">// Common in streams / forEach</span>
+list.<span class="fn">forEach</span>(<span class="ty">System</span>.out::println);</pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GENERICS ===== -->
+<section id="generics">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(77,255,163,0.1)">🧩</div>
+    <h2>Generics</h2>
+    <span class="tag">§10</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>Generic Class</h3>
+      <pre><span class="cm">// T is a type placeholder</span>
+<span class="kw">public class</span> <span class="ty">Box</span>&lt;T&gt; {
+  <span class="kw">private</span> T value;
+  <span class="kw">public void</span> <span class="fn">set</span>(T v) { value = v; }
+  <span class="kw">public</span> T <span class="fn">get</span>()       { <span class="kw">return</span> value; }
+}
+
+<span class="cm">// Usage</span>
+<span class="ty">Box</span>&lt;<span class="ty">String</span>&gt;  sb = <span class="kw">new</span> <span class="ty">Box</span>&lt;&gt;();  sb.<span class="fn">set</span>(<span class="st">"hi"</span>);
+<span class="ty">Box</span>&lt;<span class="ty">Integer</span>&gt; ib = <span class="kw">new</span> <span class="ty">Box</span>&lt;&gt;();  ib.<span class="fn">set</span>(<span class="nm">42</span>);</pre>
+    </div>
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>Bounded Types &amp; Wildcards</h3>
+      <pre><span class="cm">// Upper bound: T must be Calculatable</span>
+<span class="kw">class</span> <span class="ty">Comp</span>&lt;T <span class="kw">extends</span> <span class="ty">Calculatable</span>&gt; { }
+
+<span class="cm">// Wildcard: any type extending BankAccount</span>
+<span class="kw">void</span> <span class="fn">helper</span>(<span class="ty">Box</span>&lt;? <span class="kw">extends</span> <span class="ty">BankAccount</span>&gt; b) {
+  <span class="cm">// b can be Box<BankAccount>
+  // or Box<GoldAccount>, etc.</span>
+}</pre>
+      <div class="tip">Use <code>&lt;? extends X&gt;</code> for read-only access to a family of types.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXCEPTIONS ===== -->
+<section id="exceptions">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(255,107,107,0.1)">🚨</div>
+    <h2>Exception Handling</h2>
+    <span class="tag">§11</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>try / catch / finally</h3>
+      <pre><span class="kw">try</span> {
+  <span class="ty">int</span> result = <span class="nm">10</span> / <span class="nm">0</span>;   <span class="cm">// throws!</span>
+} <span class="kw">catch</span> (<span class="ty">ArithmeticException</span> e) {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Math error: "</span> + e.<span class="fn">getMessage</span>());
+} <span class="kw">catch</span> (<span class="ty">Exception</span> e) {   <span class="cm">// general catch (last!)</span>
+  e.<span class="fn">printStackTrace</span>();
+} <span class="kw">finally</span> {
+  <span class="cm">// Always runs (cleanup)</span>
+}</pre>
+    </div>
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>Try-with-Resources</h3>
+      <pre><span class="cm">// Auto-closes resource (no finally needed)</span>
+<span class="kw">try</span> (<span class="ty">Scanner</span> sc = <span class="kw">new</span> <span class="ty">Scanner</span>(<span class="ty">System</span>.in)) {
+  <span class="ty">String</span> line = sc.<span class="fn">nextLine</span>();
+} <span class="kw">catch</span> (<span class="ty">Exception</span> e) {
+  e.<span class="fn">printStackTrace</span>();
+}
+<span class="cm">// Scanner is closed automatically</span></pre>
+      <div class="tip">Resource must implement <code>AutoCloseable</code> or <code>Closeable</code>.</div>
+    </div>
+  </div>
+  <div class="grid grid-3" style="margin-top:16px">
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>Throwing Exceptions</h3>
+      <pre><span class="cm">// Throw built-in</span>
+<span class="kw">throw new</span> <span class="ty">RuntimeException</span>(<span class="st">"Bad input"</span>);
+
+<span class="cm">// Declare in method signature</span>
+<span class="kw">public void</span> <span class="fn">read</span>() <span class="kw">throws</span> <span class="ty">IOException</span> {
+  <span class="cm">// IOException is checked — must handle</span>
+}</pre>
+    </div>
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>Custom Exception</h3>
+      <pre><span class="kw">public class</span> <span class="ty">CustomException</span>
+      <span class="kw">extends</span> <span class="ty">RuntimeException</span> {
+  <span class="kw">public</span> <span class="ty">CustomException</span>(<span class="ty">String</span> msg) {
+    <span class="kw">super</span>(msg);
+  }
+}
+
+<span class="cm">// Throw it</span>
+<span class="kw">throw new</span> <span class="ty">CustomException</span>(<span class="st">"Invalid size"</span>);
+
+<span class="cm">// Catch it</span>
+} <span class="kw">catch</span> (<span class="ty">CustomException</span> e) { ... }</pre>
+    </div>
+    <div class="card red">
+      <h3><span class="dot dot-red"></span>Exception Hierarchy</h3>
+      <table>
+        <tr><th>Type</th><th>Checked?</th><th>Examples</th></tr>
+        <tr><td class="hl4">Error</td><td>No</td><td>OutOfMemoryError</td></tr>
+        <tr><td class="hl4">RuntimeException</td><td>No (unchecked)</td><td>NullPointer, ArrayIndex</td></tr>
+        <tr><td class="hl4">IOException</td><td>Yes (checked)</td><td>FileNotFound</td></tr>
+        <tr><td class="hl4">Other Exception</td><td>Yes (checked)</td><td>SQLException</td></tr>
+      </table>
+      <p class="note">Checked = compiler forces you to handle. Unchecked = runtime only.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PACKAGES ===== -->
+<section id="packages">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(247,201,75,0.12)">📁</div>
+    <h2>Packages &amp; Libraries</h2>
+    <span class="tag">§12</span>
+  </div>
+  <div class="grid grid-3">
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Import &amp; Package</h3>
+      <pre><span class="cm">// At top of file</span>
+<span class="kw">package</span> com.myapp;
+
+<span class="kw">import</span> java.util.Scanner;
+<span class="kw">import</span> java.util.*;    <span class="cm">// wildcard</span>
+
+<span class="cm">// Fully qualified name (no import)</span>
+java.util.<span class="ty">Scanner</span> sc
+  = <span class="kw">new</span> java.util.<span class="ty">Scanner</span>(<span class="ty">System</span>.in);</pre>
+    </div>
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Key Java Packages</h3>
+      <table>
+        <tr><th>Package</th><th>Contains</th></tr>
+        <tr><td><code>java.lang</code></td><td>String, Math, Object (auto-imported)</td></tr>
+        <tr><td><code>java.util</code></td><td>Scanner, ArrayList, HashMap</td></tr>
+        <tr><td><code>java.io</code></td><td>File, InputStream, BufferedReader</td></tr>
+        <tr><td><code>java.sql</code></td><td>Connection, ResultSet (JDBC)</td></tr>
+        <tr><td><code>java.net.http</code></td><td>HttpClient, HttpRequest</td></tr>
+      </table>
+    </div>
+    <div class="card yellow">
+      <h3><span class="dot dot-yellow"></span>Access Modifiers</h3>
+      <table>
+        <tr><th>Modifier</th><th>Accessible from</th></tr>
+        <tr><td><code class="hl">public</code></td><td>Anywhere</td></tr>
+        <tr><td><code class="hl">protected</code></td><td>Same package + subclasses</td></tr>
+        <tr><td><code class="hl">(none)</code></td><td>Same package only</td></tr>
+        <tr><td><code class="hl">private</code></td><td>Same class only</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== THREADS ===== -->
+<section id="threads">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(94,138,255,0.12)">⚡</div>
+    <h2>Multithreading</h2>
+    <span class="tag">§13</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Creating &amp; Starting Threads</h3>
+      <pre><span class="cm">// Lambda as Runnable</span>
+<span class="ty">Thread</span> t = <span class="kw">new</span> <span class="ty">Thread</span>(() -&gt; {
+  <span class="kw">for</span> (<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; <span class="nm">10</span>; i++) {
+    <span class="ty">System</span>.out.<span class="fn">println</span>(i);
+    <span class="kw">try</span> {
+      <span class="ty">Thread</span>.<span class="fn">sleep</span>(<span class="nm">1000</span>); <span class="cm">// 1 second</span>
+    } <span class="kw">catch</span> (<span class="ty">InterruptedException</span> e) {}
+  }
+});
+t.<span class="fn">start</span>();  <span class="cm">// NOT t.run()</span></pre>
+      <div class="warn">⚠ Never run long tasks on the JavaFX Application Thread — it freezes the UI.</div>
+    </div>
+    <div class="card blue">
+      <h3><span class="dot dot-blue"></span>Thread States &amp; Synchronization</h3>
+      <table>
+        <tr><th>State</th><th>Meaning</th></tr>
+        <tr><td class="hl2">Ready</td><td>Waiting for CPU time</td></tr>
+        <tr><td class="hl2">Running</td><td>Executing run()</td></tr>
+        <tr><td class="hl2">Sleeping</td><td>sleep() called — CPU released</td></tr>
+        <tr><td class="hl2">Waiting</td><td>wait() called — awaiting notify()</td></tr>
+        <tr><td class="hl2">Blocked</td><td>Waiting for I/O or lock</td></tr>
+        <tr><td class="hl2">Terminated</td><td>run() completed</td></tr>
+      </table>
+      <pre style="margin-top:10px"><span class="cm">// Mutual exclusion</span>
+<span class="kw">public synchronized</span> <span class="ty">Object</span> <span class="fn">read</span>() { ... }
+
+<span class="cm">// Wait / notify</span>
+<span class="fn">wait</span>();      <span class="cm">// release lock, pause</span>
+<span class="fn">notify</span>();    <span class="cm">// wake one waiting thread</span>
+<span class="fn">notifyAll</span>(); <span class="cm">// wake all</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===== JAVAFX ===== -->
+<section id="javafx">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(199,125,255,0.12)">🖥️</div>
+    <h2>JavaFX UI Framework</h2>
+    <span class="tag">§14</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Scene Graph Structure</h3>
+      <pre><span class="cm">// Every JavaFX app:</span>
+Stage → Scene → Root Node → Children
+
+<span class="kw">public class</span> <span class="ty">MyApp</span> <span class="kw">extends</span> <span class="ty">Application</span> {
+  <span class="op">@Override</span>
+  <span class="kw">public void</span> <span class="fn">start</span>(<span class="ty">Stage</span> stage) {
+    <span class="ty">Label</span> lbl = <span class="kw">new</span> <span class="ty">Label</span>(<span class="st">"Hello!"</span>);
+    <span class="ty">StackPane</span> root = <span class="kw">new</span> <span class="ty">StackPane</span>(lbl);
+    <span class="ty">Scene</span> scene = <span class="kw">new</span> <span class="ty">Scene</span>(root, <span class="nm">400</span>, <span class="nm">300</span>);
+    stage.<span class="fn">setScene</span>(scene);
+    stage.<span class="fn">setTitle</span>(<span class="st">"My App"</span>);
+    stage.<span class="fn">show</span>();
+  }
+  <span class="kw">public static void</span> <span class="fn">main</span>(<span class="ty">String</span>[] a) {
+    <span class="fn">launch</span>(a);
+  }
+}</pre>
+    </div>
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Layout Controls</h3>
+      <table>
+        <tr><th>Layout</th><th>Best For</th></tr>
+        <tr><td class="hl5">StackPane</td><td>Stack children center (overlapping)</td></tr>
+        <tr><td class="hl5">HBox / VBox</td><td>Row or column of controls</td></tr>
+        <tr><td class="hl5">GridPane</td><td>Rows + columns (table-like)</td></tr>
+        <tr><td class="hl5">BorderPane</td><td>Top/Bottom/Left/Right/Center zones</td></tr>
+        <tr><td class="hl5">AnchorPane</td><td>Free placement with anchors</td></tr>
+        <tr><td class="hl5">FlowPane</td><td>Flowing, wrap-around layout</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="grid grid-3" style="margin-top:16px">
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Events &amp; Handlers</h3>
+      <pre><span class="cm">// Button click</span>
+btn.<span class="fn">setOnAction</span>(e -&gt; {
+  label.<span class="fn">setText</span>(<span class="st">"Clicked!"</span>);
+});
+
+<span class="cm">// Mouse events</span>
+node.<span class="fn">setOnMouseClicked</span>(e -&gt; { ... });
+node.<span class="fn">setOnMouseEntered</span>(e -&gt; { ... });
+
+<span class="cm">// Key events</span>
+field.<span class="fn">setOnKeyTyped</span>(e -&gt; {
+  <span class="kw">if</span> (e.<span class="fn">getCharacter</span>().<span class="fn">equals</span>(<span class="st">"\r"</span>))
+    <span class="cm">// Enter pressed</span>
+});</pre>
+    </div>
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Properties &amp; Bindings</h3>
+      <pre><span class="cm">// Unidirectional binding</span>
+text2.<span class="fn">rotateProperty</span>()
+  .<span class="fn">bind</span>(pane.<span class="fn">rotateProperty</span>());
+
+<span class="cm">// Bidirectional</span>
+a.<span class="fn">textProperty</span>()
+  .<span class="fn">bindBidirectional</span>(b.<span class="fn">textProperty</span>());
+
+<span class="cm">// Change listener</span>
+prop.<span class="fn">addListener</span>((obs, old, now) -&gt; {
+  <span class="ty">System</span>.out.<span class="fn">println</span>(<span class="st">"Changed to: "</span> + now);
+});</pre>
+    </div>
+    <div class="card purple">
+      <h3><span class="dot dot-purple"></span>Animation</h3>
+      <pre><span class="ty">RotateTransition</span> rt
+  = <span class="kw">new</span> <span class="ty">RotateTransition</span>(
+    <span class="ty">Duration</span>.<span class="fn">millis</span>(<span class="nm">2500</span>), node);
+rt.<span class="fn">setFromAngle</span>(<span class="nm">0</span>);
+rt.<span class="fn">setToAngle</span>(<span class="nm">360</span>);
+rt.<span class="fn">play</span>();
+
+<span class="cm">// FadeTransition, TranslateTransition,
+// ParallelTransition, SequentialTransition</span></pre>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SPRING BOOT ===== -->
+<section id="spring">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(77,255,163,0.1)">🌱</div>
+    <h2>Spring Boot</h2>
+    <span class="tag">§15</span>
+  </div>
+  <div class="grid grid-2">
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>What is Spring Boot?</h3>
+      <ul class="nice green">
+        <li>Framework for building Java web apps &amp; REST APIs quickly</li>
+        <li>Auto-configuration: detects libraries, configures them for you</li>
+        <li>Embedded Tomcat server — just run a JAR file</li>
+        <li>Starter dependencies: one import bundles everything needed</li>
+        <li>Production-ready via Actuator (health, metrics, logging)</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>Essential Annotations</h3>
+      <table>
+        <tr><th>Annotation</th><th>Purpose</th></tr>
+        <tr><td><code class="hl3">@SpringBootApplication</code></td><td>Entry point — enables everything</td></tr>
+        <tr><td><code class="hl3">@RestController</code></td><td>Class handles HTTP requests</td></tr>
+        <tr><td><code class="hl3">@GetMapping("/url")</code></td><td>Map GET request to method</td></tr>
+        <tr><td><code class="hl3">@PostMapping("/url")</code></td><td>Map POST request</td></tr>
+        <tr><td><code class="hl3">@RequestParam</code></td><td>Extract URL query param</td></tr>
+        <tr><td><code class="hl3">@RequestBody</code></td><td>Parse JSON body to object</td></tr>
+        <tr><td><code class="hl3">@Service</code></td><td>Mark class as service bean</td></tr>
+        <tr><td><code class="hl3">@ControllerAdvice</code></td><td>Global exception handler</td></tr>
+        <tr><td><code class="hl3">@ExceptionHandler</code></td><td>Handle specific exception</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="grid grid-2" style="margin-top:16px">
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>REST Controller Example</h3>
+      <pre><span class="op">@RestController</span>
+<span class="op">@RequestMapping</span>(<span class="st">"/mtg"</span>)
+<span class="kw">public class</span> <span class="ty">MortgageController</span> {
+
+  <span class="kw">private final</span> <span class="ty">MortgageService</span> svc;
+
+  <span class="cm">// Constructor injection</span>
+  <span class="kw">public</span> <span class="ty">MortgageController</span>(<span class="ty">MortgageService</span> svc) {
+    <span class="kw">this</span>.svc = svc;
+  }
+
+  <span class="op">@GetMapping</span>(<span class="st">"/payment"</span>)
+  <span class="kw">public</span> <span class="ty">ResponseEntity</span>&lt;<span class="ty">String</span>&gt; <span class="fn">pay</span>(
+      <span class="op">@RequestParam</span> <span class="ty">double</span> principal,
+      <span class="op">@RequestParam</span> <span class="ty">int</span> years,
+      <span class="op">@RequestParam</span> <span class="ty">double</span> interest) {
+    <span class="ty">String</span> result = svc.<span class="fn">calculate</span>(principal,years,interest);
+    <span class="kw">return</span> <span class="ty">ResponseEntity</span>.<span class="fn">ok</span>(result);
+  }
+}</pre>
+    </div>
+    <div class="card green">
+      <h3><span class="dot dot-green"></span>HTTP Methods + Actuator</h3>
+      <table>
+        <tr><th>HTTP</th><th>Annotation</th><th>Purpose</th></tr>
+        <tr><td class="hl3">GET</td><td><code>@GetMapping</code></td><td>Read resource</td></tr>
+        <tr><td class="hl3">POST</td><td><code>@PostMapping</code></td><td>Create resource</td></tr>
+        <tr><td class="hl3">PUT</td><td><code>@PutMapping</code></td><td>Replace resource</td></tr>
+        <tr><td class="hl3">PATCH</td><td><code>@PatchMapping</code></td><td>Partially update</td></tr>
+        <tr><td class="hl3">DELETE</td><td><code>@DeleteMapping</code></td><td>Remove resource</td></tr>
+      </table>
+      <hr class="divider">
+      <div class="label label-green">Actuator Endpoints</div>
+      <table>
+        <tr><td><code>/actuator/health</code></td><td>App status</td></tr>
+        <tr><td><code>/actuator/metrics</code></td><td>JVM, memory, CPU</td></tr>
+        <tr><td><code>/actuator/beans</code></td><td>All Spring beans</td></tr>
+      </table>
+      <pre style="margin-top:8px"><span class="cm"># application.properties</span>
+management.endpoints.web.exposure.include=*
+server.port=<span class="nm">8081</span></pre>
+    </div>
+  </div>
+</section>
+
+</main>
+
+</div><!-- .page-content -->
+
+</body>
+</html>

@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Packages — Cheat Sheet</title>
+<style>
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --bg:       #0d0f14;
+  --surface:  #13161e;
+  --card:     #1a1e2a;
+  --border:   #252a38;
+  --accent:   #f97316;
+  --text:     #e2e8f0;
+  --muted:    #8892a4;
+  --code-bg:  #0a0c12;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── CROSS-NAV ── */
+.crossnav {
+  background: #080a0f;
+  border-bottom: 1px solid #1a1d2a;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 40px;
+  flex-shrink: 0;
+}
+.crossnav::-webkit-scrollbar { display: none; }
+.crossnav-label {
+  color: rgba(255,255,255,0.22);
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0 12px 0 0;
+  border-right: 1px solid #1e2235;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+.crossnav a {
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.crossnav a:hover {
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(255,255,255,0.1);
+}
+.crossnav a.active {
+  color: #fff;
+  background: rgba(79,142,247,0.14);
+  border-color: rgba(79,142,247,0.32);
+}
+
+/* ── PAGE HEADER ── */
+.page-header {
+  background: linear-gradient(160deg, #0d0f14 0%, #111520 60%, #0d0f14 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 44px 32px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -80px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, color-mix(in srgb, #f97316 8%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+.page-header-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.page-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  opacity: 0.85;
+}
+.page-header h1 {
+  font-size: clamp(24px, 3.5vw, 38px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+.page-header h1 span { color: var(--accent); }
+.page-header p {
+  color: var(--muted);
+  font-size: 13.5px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+/* ── PAGE NAV ── */
+.page-nav {
+  background: rgba(13,15,20,0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  position: sticky;
+  top: 40px;
+  z-index: 100;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.page-nav::-webkit-scrollbar { display: none; }
+.page-nav-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0;
+  white-space: nowrap;
+}
+.page-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.page-nav a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,0.05);
+  border-color: var(--border);
+}
+
+/* ── CONTENT WRAPPER ── */
+.page-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 32px 32px 80px;
+}
+
+/* ── INHERIT existing content styles ── */
+h2 {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #c8d0e0;
+}
+pre, code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--code-bg);
+  border: 1px solid #1e2235;
+  border-radius: 6px;
+  color: #c8d0e0;
+}
+pre { padding: 14px; overflow-x: auto; line-height: 1.55; }
+code { padding: 1px 6px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+@media (max-width: 700px) {
+  .page-header { padding: 32px 16px 28px; }
+  .page-nav { padding: 0 12px; }
+  .page-content { padding: 20px 16px 60px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="crossnav">
+  <a href="index.html" style="color:rgba(255,255,255,0.25);font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid transparent;text-decoration:none;transition:all .15s;flex-shrink:0;" onmouseover="this.style.color='rgba(255,255,255,0.65)';this.style.background='rgba(255,255,255,0.05)';this.style.borderColor='rgba(255,255,255,0.1)'" onmouseout="this.style.color='rgba(255,255,255,0.25)';this.style.background='';this.style.borderColor='transparent'">⌂</a>
+  <span class="crossnav-label">Notes</span>
+    <a href="BigDataFundamentals.html">🗄️ Big Data</a>
+    <a href="ProgrammingInJAVA.html">☕ Java</a>
+    <a href="ObjectOrientedProgramming_C_.html">🔷 OOP C#</a>
+    <a href="AdvancedDatabases.html">🗃️ Databases</a>
+    <a href="SoftwarePackages.html" class="active">📦 Packages</a>
+</div>
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-label">ULBS · Software Packages</div>
+    <h1>Software <span>Packages</span> Cheat Sheet</h1>
+    <p>All course topics in one place — lifecycle, prototyping, Excel, macros, Python, and more.</p>
+  </div>
+</div>
+
+<div class="page-nav">
+  <div class="page-nav-inner">
+    <a href="#lifecycle">📦 Lifecycle</a>
+    <a href="#prototyping">🔧 Prototyping</a>
+    <a href="#excel">📊 What-If</a>
+    <a href="#macros">⚡ Macros</a>
+    <a href="#pandas">🐼 Pandas+Excel</a>
+    <a href="#openpyxl">📂 OpenPyXL</a>
+    <a href="#selection">🔍 Selection</a>
+    <a href="#legal">⚖️ IP & Licenses</a>
+  </div>
+</div>
+
+<div class="page-content">
+<!-- page-specific styles -->
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .2s;
+    text-decoration: none;
+  }
+  .tag:hover { border-color: var(--accent); color: var(--accent); }
+  /* MAIN GRID */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .full { grid-column: 1 / -1; }
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  /* PHASE LIFECYCLE */
+  .phase-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .phase {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    position: relative;
+  }
+  .phase::before {
+    content: attr(data-n);
+    position: absolute;
+    top: 8px; right: 10px;
+    font-size: 22px;
+    font-weight: 700;
+    opacity: 0.08;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .phase h3 {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .phase ul {
+    list-style: none;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .phase ul li::before { content: '› '; color: var(--accent); }
+  /* ACCENT COLORS PER PHASE */
+  .p1 { border-color: #6c63ff44; } .p1 h3 { color: #6c63ff; }
+  .p2 { border-color: #00d4aa44; } .p2 h3 { color: #00d4aa; }
+  .p3 { border-color: #ffd16644; } .p3 h3 { color: #ffd166; }
+  .p4 { border-color: #ff6b6b44; } .p4 h3 { color: #ff6b6b; }
+  .p5 { border-color: #06d6a044; } .p5 h3 { color: #06d6a0; }
+  .p6 { border-color: #f77f0044; } .p6 h3 { color: #f77f00; }
+  .p7 { border-color: #ae2d6844; } .p7 h3 { color: #ae2d68; }
+  /* CODE BLOCKS */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    overflow-x: auto;
+    margin: 10px 0;
+  }
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #a8dadc;
+  }
+  pre code { color: inherit; }
+  .kw { color: #c792ea; }   /* keyword */
+  .fn { color: #82aaff; }   /* function */
+  .str { color: #c3e88d; }  /* string */
+  .cm { color: #546e7a; }   /* comment */
+  .num { color: #f78c6c; }  /* number */
+  .cls { color: #ffcb6b; }  /* class */
+  /* INLINE CODE */
+  code.inline {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 12px;
+    color: #a8dadc;
+  }
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  th {
+    text-align: left;
+    padding: 7px 10px;
+    background: var(--surface2);
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+  /* TIPS / PILLS */
+  .pill {
+    display: inline-block;
+    border-radius: 4px;
+    padding: 1px 7px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .pill-green { background: #06d6a022; color: #06d6a0; }
+  .pill-red   { background: #ff6b6b22; color: #ff6b6b; }
+  .pill-blue  { background: #6c63ff22; color: #6c63ff; }
+  .pill-yellow{ background: #ffd16622; color: #ffd166; }
+  /* TWO-COL INSIDE CARD */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  /* STEPS LIST */
+  .steps { list-style: none; counter-reset: step; }
+  .steps li {
+    counter-increment: step;
+    padding: 6px 0 6px 28px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    position: relative;
+  }
+  .steps li:last-child { border-bottom: none; }
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    width: 20px; height: 20px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 7px;
+  }
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 10px 0;
+  }
+  .flow-step {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .flow-arrow { color: var(--accent); font-size: 14px; }
+  /* CRITERIA CARDS */
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .criterion {
+    background: var(--surface2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    border-left: 3px solid;
+  }
+  .criterion h4 { font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+  .criterion p { font-size: 11px; color: var(--muted); }
+  /* SECTION LABEL */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 24px 0 8px;
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+  .section-label:first-child { border-top: none; padding-top: 0; }
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: var(--surface2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 12px;
+    margin: 10px 0;
+  }
+  .highlight-box.warn { border-color: var(--accent3); }
+  .highlight-box.ok { border-color: var(--accent2); }
+  .highlight-box.tip { border-color: var(--accent4); }
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .container { grid-template-columns: 1fr; padding: 16px; }
+    .full { grid-column: 1; }
+    nav { padding: 0 16px; }
+    header { padding: 24px 16px 20px; }
+    header h1 { font-size: 1.6rem; }
+    .phase-grid { grid-template-columns: 1fr 1fr; }
+    .two-col, .criteria-grid { grid-template-columns: 1fr; }
+  }
+</style>
+  <!-- ═══════════════ LIFECYCLE ═══════════════ -->
+  <div class="section-label" id="lifecycle">📦 Software Package Lifecycle</div>
+
+  <div class="card full">
+    <div class="card-header"><span class="icon">📦</span><h2>7 Phases of the Software Lifecycle</h2><span class="sub">SDLC</span></div>
+    <div class="card-body">
+      <div class="phase-grid">
+        <div class="phase p1" data-n="1">
+          <h3>1. Planning</h3>
+          <ul>
+            <li>Define purpose & goals</li>
+            <li>Identify stakeholders</li>
+            <li>Allocate budget/team</li>
+            <li>Feasibility analysis</li>
+          </ul>
+        </div>
+        <div class="phase p2" data-n="2">
+          <h3>2. Requirements</h3>
+          <ul>
+            <li><strong style="color:var(--text)">Functional</strong>: what it does</li>
+            <li><strong style="color:var(--text)">Non-functional</strong>: performance, security</li>
+            <li>Interviews, surveys</li>
+          </ul>
+        </div>
+        <div class="phase p3" data-n="3">
+          <h3>3. Design</h3>
+          <ul>
+            <li>UI: visual elements</li>
+            <li>UX: user experience</li>
+            <li>System architecture</li>
+            <li>Data flow diagrams</li>
+          </ul>
+        </div>
+        <div class="phase p4" data-n="4">
+          <h3>4. Development</h3>
+          <ul>
+            <li>Write source code</li>
+            <li>Version control (Git)</li>
+            <li>CI/CD pipelines</li>
+            <li>Team collaboration</li>
+          </ul>
+        </div>
+        <div class="phase p5" data-n="5">
+          <h3>5. Testing</h3>
+          <ul>
+            <li>Unit → Integration → System</li>
+            <li>UAT (end-user testing)</li>
+            <li>Tools: Selenium, JUnit, Postman</li>
+          </ul>
+        </div>
+        <div class="phase p6" data-n="6">
+          <h3>6. Deployment</h3>
+          <ul>
+            <li>Move to production</li>
+            <li>Install packages / scripts</li>
+            <li>Roll out to users</li>
+          </ul>
+        </div>
+        <div class="phase p1" data-n="7">
+          <h3>7. Maintenance</h3>
+          <ul>
+            <li>Bug fixes</li>
+            <li>Feature updates</li>
+            <li>User support</li>
+          </ul>
+        </div>
+        <div class="phase p3" data-n="8">
+          <h3>8. Retirement</h3>
+          <ul>
+            <li>Phase out features</li>
+            <li>Data migration</li>
+            <li>Archive/deactivate</li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight-box tip" style="margin-top:14px">
+        <strong>Architecture patterns:</strong> Client-Server (tasks split between server & client) | Microservices (small independent services) | Monolith (everything together). CI/CD = Continuous Integration/Continuous Deployment — push small changes frequently.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PROTOTYPING ═══════════════ -->
+  <div class="section-label" id="prototyping">🔧 Software Prototyping</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔧</span><h2>Prototyping Types</h2></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Type</th><th>What it means</th></tr>
+        <tr><td><span class="pill pill-blue">Throwaway</span></td><td>Build fast, test, then discard. Quick validation.</td></tr>
+        <tr><td><span class="pill pill-green">Evolutionary</span></td><td>Prototype keeps improving based on feedback — becomes the final product.</td></tr>
+        <tr><td><span class="pill pill-yellow">Incremental</span></td><td>Build in small sections, combine at the end.</td></tr>
+        <tr><td><span class="pill pill-red">Extreme</span></td><td>Used in web dev — rapidly test user interfaces.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔄</span><h2>Prototyping Process & Tools</h2></div>
+    <div class="card-body">
+      <div class="flow">
+        <div class="flow-step">Requirements</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Build Prototype</div><span class="flow-arrow">→</span>
+        <div class="flow-step">User Feedback</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Refine</div><span class="flow-arrow">→</span>
+        <div class="flow-step">Final Product</div>
+      </div>
+      <table style="margin-top:10px">
+        <tr><th>Tool</th><th>Use</th></tr>
+        <tr><td>Figma / Sketch / Adobe XD</td><td>Wireframes & UI layouts</td></tr>
+        <tr><td>Low-fidelity</td><td>Paper sketches, quick mockups</td></tr>
+        <tr><td>High-fidelity</td><td>Interactive, near-final models</td></tr>
+        <tr><td>Excel + VBA</td><td>Process simulations, dashboards</td></tr>
+      </table>
+      <div class="highlight-box warn" style="margin-top:10px">
+        ⚠️ <strong>Watch out:</strong> Users may confuse prototype for final product. Avoid <em>scope creep</em> (adding features endlessly).
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ EXCEL WHAT-IF ═══════════════ -->
+  <div class="section-label" id="excel">📊 Excel — Scenario Analysis & Forecasting</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🎯</span><h2>Goal Seek</h2><span class="sub">Data → What-If Analysis → Goal Seek</span></div>
+    <div class="card-body">
+      <div class="highlight-box ok">
+        <strong>Idea:</strong> "What input do I need to reach a target output?"<br>
+        Example: To hit $50,000 profit, what sales volume do I need?
+      </div>
+      <table style="margin-top:10px">
+        <tr><th>Field</th><th>What to enter</th></tr>
+        <tr><td><strong>Set cell</strong></td><td>Cell with the formula (e.g. D9 = result)</td></tr>
+        <tr><td><strong>To value</strong></td><td>The target number you want (e.g. 100)</td></tr>
+        <tr><td><strong>By changing cell</strong></td><td>The input cell Excel will adjust (e.g. C9)</td></tr>
+      </table>
+      <div class="highlight-box tip" style="margin-top:10px">
+        The <em>target cell must contain a formula</em>. Goal Seek works backwards from result → input.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📋</span><h2>Scenario Manager</h2><span class="sub">Data → What-If → Scenario Manager</span></div>
+    <div class="card-body">
+      <div class="highlight-box ok">
+        <strong>Idea:</strong> Define multiple "what if" situations (Best/Worst/Expected) and switch between them instantly.
+      </div>
+      <ol class="steps">
+        <li>Data → What-If Analysis → Scenario Manager</li>
+        <li>Click Add → name your scenario (e.g. "Best Case")</li>
+        <li>Select changing cells → enter their values</li>
+        <li>Repeat for each scenario</li>
+        <li>Click Show to switch; click Summary for a comparison report</li>
+      </ol>
+      <div class="highlight-box tip" style="margin-top:10px">
+        Max <strong>32 variables</strong> per scenario. For more variables → use Data Tables.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📉</span><h2>Data Tables</h2><span class="sub">See ALL outcomes at once</span></div>
+    <div class="card-body">
+      <p style="font-size:12px; color:var(--muted); margin-bottom:10px">Unlike Scenario Manager (switch one at a time), Data Tables show all results simultaneously in a grid.</p>
+      <ol class="steps">
+        <li>Set up your formula in a cell (e.g. =B5 for Total Revenue)</li>
+        <li>Create a column of input values (e.g. 0%, 5%, 10%...)</li>
+        <li>Select the range (inputs + formula cell)</li>
+        <li>Data → What-If Analysis → Data Table</li>
+        <li>Enter Column Input Cell (the variable cell, e.g. B3)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔮</span><h2>Forecast Sheet</h2><span class="sub">Data → Forecast Sheet</span></div>
+    <div class="card-body">
+      <div class="highlight-box ok">
+        Uses historical data to predict future trends automatically.
+      </div>
+      <table style="margin-top:10px">
+        <tr><th>Element</th><th>Meaning</th></tr>
+        <tr><td>Blue line</td><td>Actual historical data</td></tr>
+        <tr><td>Orange line</td><td>Predicted future values</td></tr>
+        <tr><td>Gray shaded area</td><td>Confidence interval (uncertainty range)</td></tr>
+      </table>
+      <p style="font-size:11px; color:var(--muted); margin-top:8px">Settings: Forecast End date, Confidence Interval (default 95%), Seasonality (auto-detect or manual), missing point interpolation.</p>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MACROS ═══════════════ -->
+  <div class="section-label" id="macros">⚡ Excel Macros & VBA</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">⚡</span><h2>What is a Macro?</h2></div>
+    <div class="card-body">
+      <p style="font-size:12px; margin-bottom:10px">A macro is a <strong>recorded sequence of actions</strong> that Excel can replay automatically — no manual repetition needed.</p>
+      <div class="two-col">
+        <div>
+          <p style="font-size:11px; color:var(--muted); margin-bottom:6px">TYPE 1 — Recorded Macro</p>
+          <ul style="font-size:11px; list-style:none; color:var(--muted)">
+            <li>✅ No coding needed</li>
+            <li>✅ Record actions via UI</li>
+            <li>❌ Limited logic</li>
+          </ul>
+        </div>
+        <div>
+          <p style="font-size:11px; color:var(--muted); margin-bottom:6px">TYPE 2 — VBA Macro</p>
+          <ul style="font-size:11px; list-style:none; color:var(--muted)">
+            <li>✅ Full programming power</li>
+            <li>✅ Loops, conditions</li>
+            <li>❌ Requires VBA knowledge</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🎬</span><h2>Recording & Running a Macro</h2></div>
+    <div class="card-body">
+      <p style="font-size:11px; color:var(--muted); margin-bottom:8px"><strong style="color:var(--text)">Record:</strong> View → Macros → Record Macro → do your actions → Stop Recording</p>
+      <p style="font-size:11px; color:var(--muted); margin-bottom:12px"><strong style="color:var(--text)">Run:</strong> Press assigned shortcut key  OR  View → Macros → View Macros → Run</p>
+      <p style="font-size:11px; color:var(--muted); margin-bottom:8px"><strong style="color:var(--text)">Edit VBA:</strong> Press <code class="inline">Alt + F11</code> to open the VBA editor</p>
+      <pre><code><span class="cm">' Example: VBA macro to bold and color cells</span>
+<span class="kw">Sub</span> <span class="fn">FormatCellsMacro</span>()
+    <span class="kw">With</span> Range(<span class="str">"A1:B5"</span>)
+        .Font.Bold = <span class="kw">True</span>
+        .Font.Color = RGB(<span class="num">0</span>, <span class="num">0</span>, <span class="num">139</span>)  <span class="cm">' Dark blue</span>
+        .Interior.Color = RGB(<span class="num">255</span>, <span class="num">255</span>, <span class="num">200</span>)  <span class="cm">' Light yellow</span>
+    <span class="kw">End With</span>
+<span class="kw">End Sub</span></code></pre>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PYTHON + PANDAS ═══════════════ -->
+  <div class="section-label" id="pandas">🐼 Python + Excel — Pandas</div>
+
+  <div class="card full">
+    <div class="card-header"><span class="icon">🐼</span><h2>Pandas — Reading & Writing Excel Files</h2><span class="sub">pip install pandas openpyxl</span></div>
+    <div class="card-body">
+      <div class="two-col">
+        <div>
+          <p style="font-size:11px; color:var(--muted); margin-bottom:6px">📝 Create &amp; Save Excel File</p>
+          <pre><code><span class="kw">import</span> pandas <span class="kw">as</span> pd
+<span class="kw">import</span> os
+
+<span class="cm"># Define data as a dictionary</span>
+data = {
+  <span class="str">"Date"</span>: [<span class="str">"2025-01-01"</span>],
+  <span class="str">"Region"</span>: [<span class="str">"North"</span>],
+  <span class="str">"Product"</span>: [<span class="str">"Laptop"</span>],
+  <span class="str">"Quantity"</span>: [<span class="num">5</span>],
+  <span class="str">"Price"</span>: [<span class="num">1200</span>]
+}
+
+df = pd.<span class="fn">DataFrame</span>(data)  <span class="cm"># dict → table</span>
+df.<span class="fn">to_excel</span>(<span class="str">"sales.xlsx"</span>, index=<span class="kw">False</span>)</code></pre>
+
+          <p style="font-size:11px; color:var(--muted); margin: 10px 0 6px">🔍 Read &amp; Filter</p>
+          <pre><code>df = pd.<span class="fn">read_excel</span>(<span class="str">"sales.xlsx"</span>)
+filtered = df[df[<span class="str">"Region"</span>] == <span class="str">"North"</span>]
+filtered.<span class="fn">to_excel</span>(<span class="str">"north_sales.xlsx"</span>, index=<span class="kw">False</span>)</code></pre>
+        </div>
+        <div>
+          <p style="font-size:11px; color:var(--muted); margin-bottom:6px">➕ Append New Rows</p>
+          <pre><code>df_old = pd.<span class="fn">read_excel</span>(<span class="str">"sales.xlsx"</span>)
+
+new_row = pd.<span class="fn">DataFrame</span>([{
+  <span class="str">"Date"</span>: <span class="str">"2025-03-23"</span>,
+  <span class="str">"Region"</span>: <span class="str">"East"</span>,
+  <span class="str">"Product"</span>: <span class="str">"Monitor"</span>,
+  <span class="str">"Quantity"</span>: <span class="num">4</span>,
+  <span class="str">"Price"</span>: <span class="num">365</span>
+}])
+
+combined = pd.<span class="fn">concat</span>(
+  [df_old, new_row],
+  ignore_index=<span class="kw">True</span>  <span class="cm"># reset row numbers</span>
+)
+combined.<span class="fn">to_excel</span>(<span class="str">"sales.xlsx"</span>, index=<span class="kw">False</span>)</code></pre>
+
+          <p style="font-size:11px; color:var(--muted); margin: 10px 0 6px">🔤 Format Data</p>
+          <pre><code>df.columns = df.columns.<span class="fn">str.upper</span>()
+df[<span class="str">"PRODUCT"</span>] = df[<span class="str">"PRODUCT"</span>].<span class="fn">str.title</span>()
+<span class="cm"># .str.upper() → "laptop" → "LAPTOP"</span>
+<span class="cm"># .str.title() → "laptop" → "Laptop"</span></code></pre>
+        </div>
+      </div>
+      <div class="highlight-box tip" style="margin-top:12px">
+        <strong>Key concepts:</strong> <code class="inline">pd.DataFrame(dict)</code> = create table | <code class="inline">index=False</code> = don't write row numbers to file | <code class="inline">ignore_index=True</code> = reset row numbers after concat | <code class="inline">engine="openpyxl"</code> = specify .xlsx handler explicitly
+      </div>
+    </div>
+  </div>
+
+  <!-- os module -->
+  <div class="card">
+    <div class="card-header"><span class="icon">🗂️</span><h2>Python <code style="color:#a8dadc;font-size:13px">os</code> Module — Quick Reference</h2></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Function</th><th>What it does</th></tr>
+        <tr><td><code class="inline">os.getcwd()</code></td><td>Current working directory</td></tr>
+        <tr><td><code class="inline">os.listdir(path)</code></td><td>List files in a folder</td></tr>
+        <tr><td><code class="inline">os.mkdir(path)</code></td><td>Create one directory</td></tr>
+        <tr><td><code class="inline">os.makedirs(path, exist_ok=True)</code></td><td>Create folder + all parents; no error if exists</td></tr>
+        <tr><td><code class="inline">os.remove(file)</code></td><td>Delete a file</td></tr>
+        <tr><td><code class="inline">os.path.join(a, b)</code></td><td>Safe cross-platform path joining</td></tr>
+        <tr><td><code class="inline">os.name</code></td><td><code class="inline">'nt'</code> = Windows, <code class="inline">'posix'</code> = Linux/Mac</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ OPENPYXL ═══════════════ -->
+  <div class="section-label" id="openpyxl">📂 OpenPyXL — Advanced Excel Control</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📂</span><h2>OpenPyXL Basics</h2><span class="sub">pip install openpyxl</span></div>
+    <div class="card-body">
+      <div class="highlight-box ok">
+        Use OpenPyXL when you need <strong>full control</strong> over Excel: cell styling, colors, borders, formulas, charts. Only works with <code class="inline">.xlsx</code> (not .xls).
+      </div>
+      <pre><code><span class="kw">from</span> openpyxl <span class="kw">import</span> <span class="cls">Workbook</span>
+
+wb = <span class="cls">Workbook</span>()         <span class="cm"># create new workbook</span>
+ws = wb.active           <span class="cm"># get the default sheet</span>
+
+ws.<span class="fn">append</span>([<span class="str">"ID"</span>, <span class="str">"Name"</span>, <span class="str">"Salary"</span>])  <span class="cm"># header row</span>
+ws.<span class="fn">append</span>([<span class="num">1</span>, <span class="str">"Ana"</span>, <span class="num">4500</span>])           <span class="cm"># data row</span>
+
+wb.<span class="fn">save</span>(<span class="str">"report.xlsx"</span>)</code></pre>
+
+      <pre><code><span class="cm"># Open EXISTING file</span>
+<span class="kw">from</span> openpyxl <span class="kw">import</span> load_workbook
+
+wb = <span class="fn">load_workbook</span>(<span class="str">"report.xlsx"</span>)
+ws = wb.active
+ws.<span class="fn">append</span>([<span class="num">2</span>, <span class="str">"Ion"</span>, <span class="num">5200</span>])
+wb.<span class="fn">save</span>(<span class="str">"report.xlsx"</span>)</code></pre>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🎨</span><h2>Cell Styling — Highlight Rows</h2></div>
+    <div class="card-body">
+      <pre><code><span class="kw">from</span> openpyxl <span class="kw">import</span> load_workbook
+<span class="kw">from</span> openpyxl.styles <span class="kw">import</span> <span class="cls">PatternFill</span>
+
+wb = <span class="fn">load_workbook</span>(<span class="str">"salaries.xlsx"</span>)
+ws = wb.active
+
+<span class="cm"># Create a green fill style</span>
+green = <span class="cls">PatternFill</span>(
+  start_color=<span class="str">"C6EFCE"</span>,   <span class="cm"># hex color (light green)</span>
+  end_color=<span class="str">"C6EFCE"</span>,
+  fill_type=<span class="str">"solid"</span>
+)
+
+<span class="cm"># Loop through rows (skip header row 1)</span>
+<span class="kw">for</span> row <span class="kw">in</span> ws.<span class="fn">iter_rows</span>(min_row=<span class="num">2</span>, max_col=<span class="num">6</span>):
+  total = row[<span class="num">5</span>].value  <span class="cm"># 6th column (index 5)</span>
+  <span class="kw">if</span> total <span class="kw">and</span> total > <span class="num">5000</span>:
+    <span class="kw">for</span> cell <span class="kw">in</span> row:
+      cell.fill = green
+
+wb.<span class="fn">save</span>(<span class="str">"salaries.xlsx"</span>)</code></pre>
+      <div class="highlight-box tip" style="margin-top:10px">
+        <code class="inline">iter_rows(min_row=2)</code> skips the header | <code class="inline">row[5]</code> = column index (0-based) | <code class="inline">PatternFill</code> needs <code class="inline">start_color</code>, <code class="inline">end_color</code>, and <code class="inline">fill_type</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pandas vs OpenPyXL -->
+  <div class="card full">
+    <div class="card-header"><span class="icon">⚖️</span><h2>Pandas vs OpenPyXL vs XlsxWriter — When to Use What</h2></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Need</th><th>Best Tool</th><th>Why</th></tr>
+        <tr><td>Read/write data fast</td><td><span class="pill pill-green">Pandas</span></td><td>Simple, fast, DataFrames map directly to tables</td></tr>
+        <tr><td>Edit existing .xlsx (styles, formulas)</td><td><span class="pill pill-blue">OpenPyXL</span></td><td>Full cell-level control on existing files</td></tr>
+        <tr><td>Create new file with charts/tables</td><td><span class="pill pill-yellow">XlsxWriter</span></td><td>Best for complex formatting in new files</td></tr>
+        <tr><td>Combine power of both</td><td><span class="pill pill-green">Pandas</span> + <span class="pill pill-blue">OpenPyXL</span></td><td>Process with pandas, style with openpyxl</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SOFTWARE SELECTION ═══════════════ -->
+  <div class="section-label" id="selection">🔍 Software Selection & Usage Strategies</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">🔍</span><h2>8 Selection Criteria</h2></div>
+    <div class="card-body">
+      <div class="criteria-grid">
+        <div class="criterion" style="border-color:#6c63ff">
+          <h4 style="color:#6c63ff">1. Functional Requirements</h4>
+          <p>Does it do what you need? Are features customizable?</p>
+        </div>
+        <div class="criterion" style="border-color:#00d4aa">
+          <h4 style="color:#00d4aa">2. Usability</h4>
+          <p>Is the UI clean and intuitive? Good tutorials?</p>
+        </div>
+        <div class="criterion" style="border-color:#ffd166">
+          <h4 style="color:#ffd166">3. Compatibility</h4>
+          <p>Works with existing systems? API available? Import/export formats?</p>
+        </div>
+        <div class="criterion" style="border-color:#ff6b6b">
+          <h4 style="color:#ff6b6b">4. Performance & Reliability</h4>
+          <p>Speed, uptime, efficiency with CPU/memory.</p>
+        </div>
+        <div class="criterion" style="border-color:#06d6a0">
+          <h4 style="color:#06d6a0">5. Security</h4>
+          <p>Encryption, auth, GDPR/ISO 27001 compliance.</p>
+        </div>
+        <div class="criterion" style="border-color:#f77f00">
+          <h4 style="color:#f77f00">6. Cost & Licensing</h4>
+          <p>Total Cost of Ownership (TCO). Subscription vs. perpetual vs. open-source.</p>
+        </div>
+        <div class="criterion" style="border-color:#ae2d68">
+          <h4 style="color:#ae2d68">7. Vendor Reputation</h4>
+          <p>Is the provider stable? Support? Training available?</p>
+        </div>
+        <div class="criterion" style="border-color:#4cc9f0">
+          <h4 style="color:#4cc9f0">8. Scalability</h4>
+          <p>Can it grow with you? Migration options for the future?</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📊</span><h2>Open-Source vs. Proprietary</h2></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Feature</th><th>Open-Source</th><th>Proprietary</th></tr>
+        <tr><td>Cost</td><td><span class="pill pill-green">Often free</span></td><td><span class="pill pill-red">Paid</span></td></tr>
+        <tr><td>Support</td><td>Community-based</td><td>Vendor-backed</td></tr>
+        <tr><td>Flexibility</td><td><span class="pill pill-green">High</span></td><td><span class="pill pill-yellow">Limited</span></td></tr>
+        <tr><td>Security</td><td>Transparent (code visible)</td><td>Opaque (black box)</td></tr>
+        <tr><td>Licensing Risk</td><td><span class="pill pill-green">Low</span></td><td>Varies</td></tr>
+      </table>
+      <div class="highlight-box" style="margin-top:12px">
+        <strong>Evaluation techniques:</strong> Benchmarking | Pilot Testing | SWOT Analysis | Scoring Matrices<br>
+        <strong>Key insight:</strong> Best software ≠ best choice. <em>Best fit = best choice.</em>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LEGAL ═══════════════ -->
+  <div class="section-label" id="legal">⚖️ IP Law & Software Licenses</div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">⚖️</span><h2>4 Types of IP Protection</h2></div>
+    <div class="card-body">
+      <table>
+        <tr><th>Type</th><th>Protects</th><th>Key Point</th></tr>
+        <tr>
+          <td><strong>Copyright</strong></td>
+          <td>Source code, UI elements, object code</td>
+          <td>Automatic on creation. Protects <em>expression</em>, NOT ideas/algorithms.</td>
+        </tr>
+        <tr>
+          <td><strong>Patent</strong></td>
+          <td>Technical inventions</td>
+          <td>Up to 20 years. Expensive. US = can patent software; EU = harder.</td>
+        </tr>
+        <tr>
+          <td><strong>Trade Secret</strong></td>
+          <td>Confidential algorithms</td>
+          <td>No registration. E.g. Google's search algorithm, Netflix recommender.</td>
+        </tr>
+        <tr>
+          <td><strong>Trademark</strong></td>
+          <td>Names, logos, slogans</td>
+          <td>"Windows", Apple logo, "There's an app for that"</td>
+        </tr>
+      </table>
+      <div class="highlight-box warn" style="margin-top:10px">
+        <strong>Oracle vs. Google (2021):</strong> Google used Java APIs in Android. Supreme Court ruled it was <em>fair use</em> — transformative + limited use. APIs can be used for compatibility without copyright infringement.
+      </div>
+      <div class="highlight-box tip" style="margin-top:8px">
+        <strong>Snapchat vs. Instagram:</strong> Instagram copied the <em>idea</em> of Stories — legal! Copyright only protects the code, not the concept.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><span class="icon">📜</span><h2>Software License Types</h2></div>
+    <div class="card-body">
+      <table>
+        <tr><th>License Type</th><th>Can Modify?</th><th>Can Share?</th><th>Example</th></tr>
+        <tr>
+          <td><span class="pill pill-red">Proprietary</span></td>
+          <td>❌ No</td>
+          <td>❌ No</td>
+          <td>Windows, Adobe CC</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-green">MIT / Apache 2.0</span> (Permissive)</td>
+          <td>✅ Yes</td>
+          <td>✅ Yes (even proprietary)</td>
+          <td>React, Angular</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-blue">GNU GPL</span> (Copyleft)</td>
+          <td>✅ Yes</td>
+          <td>✅ Yes — but must stay GPL</td>
+          <td>Linux, WordPress</td>
+        </tr>
+        <tr>
+          <td><span class="pill pill-yellow">SaaS / ToS</span></td>
+          <td>N/A</td>
+          <td>Access-based, no code ownership</td>
+          <td>Google Docs, Notion</td>
+        </tr>
+      </table>
+      <div class="highlight-box" style="margin-top:10px">
+        <strong>Key license clauses:</strong> Grant of Rights | Restrictions | Termination | Warranty Disclaimer ("as-is") | Limitation of Liability
+      </div>
+      <div class="highlight-box ok" style="margin-top:8px">
+        <strong>Romania:</strong> Software protected under <strong>Law 8/1996</strong> — classified as a literary work. Aligned with Berne Convention, WIPO Copyright Treaty, TRIPS Agreement.
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK REFERENCE SUMMARY -->
+  <div class="card full" style="margin-top:4px">
+    <div class="card-header"><span class="icon">⚡</span><h2>Quick Memory Anchors — The Essentials</h2></div>
+    <div class="card-body">
+      <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+        <div style="background:var(--surface2); border-radius:8px; padding:12px;">
+          <p style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px">Lifecycle Order</p>
+          <p style="font-size:11px; line-height:1.8; color:var(--text)">Plan → Gather Reqs → Design → Develop → Test → Deploy → Maintain → Retire</p>
+        </div>
+        <div style="background:var(--surface2); border-radius:8px; padding:12px;">
+          <p style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px">What-If Tools</p>
+          <p style="font-size:11px; line-height:1.8; color:var(--text)"><strong style="color:#6c63ff">Goal Seek</strong> = result → input<br><strong style="color:#00d4aa">Scenario</strong> = switch cases<br><strong style="color:#ffd166">Data Table</strong> = all at once<br><strong style="color:#ff6b6b">Forecast</strong> = predict future</p>
+        </div>
+        <div style="background:var(--surface2); border-radius:8px; padding:12px;">
+          <p style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px">Python Libraries</p>
+          <p style="font-size:11px; line-height:1.8; color:var(--text)"><strong style="color:#6c63ff">Pandas</strong> = read/write data<br><strong style="color:#00d4aa">OpenPyXL</strong> = style & edit<br><strong style="color:#ffd166">XlsxWriter</strong> = charts & formatting<br><strong style="color:#ff6b6b">os</strong> = file system</p>
+        </div>
+        <div style="background:var(--surface2); border-radius:8px; padding:12px;">
+          <p style="font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:6px">IP Law</p>
+          <p style="font-size:11px; line-height:1.8; color:var(--text)"><strong style="color:#6c63ff">Copyright</strong> = code (auto)<br><strong style="color:#00d4aa">Patent</strong> = invention (20yr)<br><strong style="color:#ffd166">Trade Secret</strong> = private algo<br><strong style="color:#ff6b6b">Trademark</strong> = brand/logo</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- .container -->
+
+</div><!-- .page-content -->
+
+</body>
+</html>

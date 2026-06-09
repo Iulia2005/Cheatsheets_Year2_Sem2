@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Notes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  :root {
+    --bg:       #0f1117;
+    --surface:  #181c27;
+    --card:     #1e2333;
+    --border:   #2a3047;
+    --accent:   #4f8ef7;
+    --green:    #3ecf8e;
+    --orange:   #f97316;
+    --purple:   #a78bfa;
+    --yellow:   #fbbf24;
+    --text:     #e2e8f0;
+    --muted:    #7c8ba1;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a2035 50%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 56px 32px 48px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: 50%;
+    transform: translateX(-50%);
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(79,142,247,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: rgba(79,142,247,0.1);
+    border: 1px solid rgba(79,142,247,0.25);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px 80px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--card-accent);
+    opacity: 0.7;
+    transition: opacity .2s;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-accent);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 28px;
+    line-height: 1;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .card-desc {
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.55;
+    flex: 1;
+  }
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .card-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--muted);
+  }
+  .card-arrow {
+    color: var(--muted);
+    font-size: 15px;
+    transition: color .2s, transform .2s;
+    flex-shrink: 0;
+  }
+  .card:hover .card-arrow {
+    color: var(--card-accent);
+    transform: translate(2px, -2px);
+  }
+
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 0 32px 40px;
+  }
+  footer span { color: var(--accent); }
+
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 36px; }
+    main { padding: 32px 16px 60px; }
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-tag">Business Informatics</div>
+  <h1><span>Study Notes</span></h1>
+  <p>Quick-reference cheatsheets for every course — open one and get to work.</p>
+</header>
+
+<main>
+  <div class="grid">
+
+    <a class="card" href="BigDataFundamentals.html" style="--card-accent: #4f8ef7;">
+      <div class="card-icon">🗄️</div>
+      <div class="card-title">Big Data Fundamentals</div>
+      <div class="card-desc">Python, Pandas, PySpark, EDA, ML pipelines, Random Forest — the full data engineering stack.</div>
+      <div class="card-footer"><div class="card-tag">Python · PySpark · scikit-learn</div><div class="card-arrow">↗</div></div>
+    </a>
+
+    <a class="card" href="ProgrammingInJAVA.html" style="--card-accent: #f97316;">
+      <div class="card-icon">☕</div>
+      <div class="card-title">Java Programming</div>
+      <div class="card-desc">From data types and control flow to OOP, generics, threads, JavaFX, and Spring Boot.</div>
+      <div class="card-footer"><div class="card-tag">Java · Spring Boot · JavaFX</div><div class="card-arrow">↗</div></div>
+    </a>
+
+    <a class="card" href="ObjectOrientedProgramming_C_.html" style="--card-accent: #a78bfa;">
+      <div class="card-icon">🔷</div>
+      <div class="card-title">OOP in C#</div>
+      <div class="card-desc">All four pillars — encapsulation, inheritance, polymorphism, abstraction — plus interfaces and design patterns.</div>
+      <div class="card-footer"><div class="card-tag">C# · .NET · OOP</div><div class="card-arrow">↗</div></div>
+    </a>
+
+    <a class="card" href="AdvancedDatabases.html" style="--card-accent: #3ecf8e;">
+      <div class="card-icon">🗃️</div>
+      <div class="card-title">Advanced Databases</div>
+      <div class="card-desc">Oracle PL/SQL, stored procedures, triggers, exception handling, and database design patterns.</div>
+      <div class="card-footer"><div class="card-tag">SQL · PL/SQL · Oracle</div><div class="card-arrow">↗</div></div>
+    </a>
+
+    <a class="card" href="SoftwarePackages.html" style="--card-accent: #fbbf24;">
+      <div class="card-icon">📦</div>
+      <div class="card-title">Software Packages</div>
+      <div class="card-desc">Key libraries, frameworks, and tools — condensed into fast lookup references.</div>
+      <div class="card-footer"><div class="card-tag">Libraries · Frameworks</div><div class="card-arrow">↗</div></div>
+    </a>
+
+  </div>
+</main>
+
+<footer>
+</footer>
+
+</body>
+</html>
